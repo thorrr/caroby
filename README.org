@@ -1,0 +1,45 @@
+* Caroby
+A set of installation scripts for a non-admin, relocatable
+development environment
+
+** Setup
+   + caroby.bat
+     setup a new development environment.  Store local machine state
+     in %TEMP%\caroby-registry.bat
+
+     Directory structure is:
+     . => %DEVENVIRONMENT_DIR%
+     - .\packages
+     - .\bin
+       Batch files and sh scripts sourced into the path
+     - .\init.d\
+       Initialize paths and other environment variables by sourcing
+       every batch file (for cmd) and every .sh file (for cygwin)
+
+       cmd and .sh initializations are separate so we can have different path orders for cmd vs. bash
+
+       Set blah_install_dir here if we need it elsewhere
+
+     - .\make-shortcut.bat
+       Drag and drop an executable here to create a shortcut with the
+       cmd environment sourced in
+     - .\caroby-init.bat  [replace cygwin-env.bat for the most part]
+       1. Set the following environment variables that \init.d and \bin can depend on:
+          + CAROBY_DIR = relative to current script path
+
+          + PACKAGES_DIR = so we don't have to hard code 'packages' (?)
+
+       2. initialize everything in \init.d
+          + For cmd, call every .bat file
+
+          + for bash, call every .sh file
+            
+     
+** Notes / TODO
+   + create checkin script
+     to compare the "functions section" of every script with a
+     "core.bat" that has the latest versions of all of our functions
+
+   + How do we structure the scripts at the top level?  Have one
+     "driver script" that calls the sub-scripts?  Might be nice to
+     build a menu
