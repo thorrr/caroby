@@ -196,12 +196,22 @@ copy "%_rv%\Files\7-Zip\7z.exe" "%CAROBY_DIR%\bin\" > nul
 popd
 
 :downloadAndInstallCurl
-set curlURL=http://www.paehl.com/open_source/?download=curl_741_0_rtmp_ssh2_ssl_sspi.zip
 pushd .
 cd "%DOWNLOAD_DIR%"
+::first, we have to install openssl
+set opensslURL=http://indy.fulgan.com/SSL/openssl-1.0.2-i386-win32.zip
+call :download "%opensslURL%" || goto :error
+set opensslZip=%_rv%
+call :verifyMD5Hash "%CD%\%opensslZip%" 12677420fce3f4981756461b5287d6e2 || goto :error
+call :mktemp /D || goto :error
+call :UnzipFile "%_rv%" "%CD%\%opensslZip%" || goto :error
+copy "%_rv%\libeay32.dll" "%CAROBY_DIR%\bin\" > nul
+copy "%_rv%\ssleay32.dll" "%CAROBY_DIR%\bin\" > nul
+
+set curlURL=http://www.paehl.com/open_source/?download=curl_741_0_rtmp_ssh2_ssl_sspi.zip
 call :download "%curlURL%" curl.zip || goto :error
 call :verifyMD5Hash "%CD%\curl.zip" ac7dc67ade0ffda67589cf082a2ed17d || goto :error
-call :unzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
+call :UnzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
 
 :createCmdShortcut
