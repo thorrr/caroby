@@ -5,7 +5,9 @@ pushd .
 :::::::::::::::::::::::::::::::::
 set eclipseUrl=http://ftp.osuosl.org/pub/eclipse//technology/epp/downloads/release/luna/SR2/eclipse-java-luna-SR2-win32-x86_64.zip
 set eclipseMD5=d27e38f21352bfea03749319bf499dea
-set pydevUrl=http://iweb.dl.sourceforge.net/project/pydev/pydev/PyDev%203.2.0/PyDev%203.2.0.zip
+@rem set pydevUrl=http://iweb.dl.sourceforge.net/project/pydev/pydev/PyDev%203.2.0/PyDev%203.2.0.zip
+:: can't figure out how to escape the percent signs all the way down to the wget call
+set pydevUrl=http://bit.ly/1DKWHle
 set pydevMD5=4ddd60b0adc688fe78fa3fc412ef7639
 set packageName=eclipse
 :::::::::::::::::::::::::::::::::
@@ -19,9 +21,9 @@ cd "%DOWNLOAD_DIR%
 call :download %eclipseUrl% || goto :error
 set eclipseZip=%_rv%
 call :verifyMD5Hash "%CD%\%eclipseZip%" %eclipseMD5% || goto :error
-call :download %pydevUrl% || goto :error
+call :download %pydevUrl% pydev.zip || goto :error
 set pydevZip=%_rv%
-call :verifyMD5Hash "%CD%\%pydevZip%" %pydevMD5% || goto :error
+call :verifyMD5Hash "%CD%\pydev.zip" %pydevMD5% || goto :error
 popd
 
 ::unzipAndInstall
