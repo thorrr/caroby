@@ -32,7 +32,7 @@ set packageDir=%_rv%
 call :mktemp /D || goto :error
 call :UnZipFile "%_rv%" "%DOWNLOAD_DIR%\%eclipseZip%" || goto :error
 move "%_rv%\eclipse" "%packageDir%" >nul
-copy "%DOWNLOAD_DIR%\%pydevZip%" "%packageDir%\dropins" >nul
+call :UnZipFile "%packageDir%\dropins" "%DOWNLOAD_DIR%\%pydevZip%" >nul
 
 :mkshortcut
 pushd .
