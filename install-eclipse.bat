@@ -5,8 +5,8 @@ pushd .
 :::::::::::::::::::::::::::::::::
 set eclipseUrl=http://ftp.osuosl.org/pub/eclipse//technology/epp/downloads/release/luna/SR2/eclipse-java-luna-SR2-win32-x86_64.zip
 set eclipseMD5=d27e38f21352bfea03749319bf499dea
-set pydevUrl=http://softlayer-ams.dl.sourceforge.net/project/pydev/pydev/PyDev%%203.2.0/PyDev%%203.2.0.zip
-set pydevMD5=2f4ab04ccb1bd462709c8325aff4b973
+set pydevUrl=http://iweb.dl.sourceforge.net/project/pydev/pydev/PyDev%203.2.0/PyDev%203.2.0.zip
+set pydevMD5=4ddd60b0adc688fe78fa3fc412ef7639
 set packageName=eclipse
 :::::::::::::::::::::::::::::::::
 
