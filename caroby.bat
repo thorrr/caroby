@@ -355,11 +355,15 @@ GOTO:EOF
 :verifyMD5Hash    -- verify cryptographic hash of the file
 ::                -- %~1  file to verify
 ::                -- %~2 md5 hash
+
+:: first, make sure fciv.exe is on our path
 fciv.exe 2>NUL 1>NUL
 if %ERRORLEVEL%==9009 (
     echo WARNING:  MD5 sum not checked for file %~1
     exit /b 0
 )
+
+:: now run fciv.exe on the input file
 setlocal enabledelayedexpansion
 set match=false
 set sum=
