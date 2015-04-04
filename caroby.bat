@@ -5,10 +5,7 @@ pushd .
 set CAROBY_DIR=%USERPROFILE%\caroby
 set DOWNLOAD_DIR=%USERPROFILE%\Downloads
 
-::DEBUG
 set PATH=%CAROBY_DIR%\bin;%PATH%
-goto :downloadAndInstall7Zip
-
 
 :argLoop
 if [%1]==[] goto argEndLoop
@@ -201,9 +198,6 @@ copy "%_rv%\Files\7-Zip\7z.dll" "%CAROBY_DIR%\bin\" > nul
 copy "%_rv%\Files\7-Zip\7z.exe" "%CAROBY_DIR%\bin\" > nul
 popd
 
-::DEBUG
-goto:end
-
 :downloadAndInstallCurl
 set curlURL=http://www.paehl.com/open_source/?download=curl_741_0_rtmp_ssh2_ssl_sspi.zip
 pushd .
@@ -212,11 +206,6 @@ call :download "%curlURL%" curl.zip || goto :error
 call :verifyMD5Hash curl.zip ac7dc67ade0ffda67589cf082a2ed17d || goto :error
 call :unzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
-
-
-
-
-
 
 :createCmdShortcut
 bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat" /shortcut:cmd 
