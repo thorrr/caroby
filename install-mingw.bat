@@ -3,10 +3,11 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=mingw
-set MINGW32_URL=http://cznic.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
+set MINGW32_URL=http://iweb.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
+set md5sum=971778e9330ae006aaeb2d63344be5f3
 :::::::::::::::::::::::::::::::::
 
+set packageName=mingw
 ::setup
 call :carobyRegistry || goto :error
 
@@ -16,7 +17,7 @@ call :verifyPackageNotInstalled %packageName% || goto :error
 cd "%DOWNLOAD_DIR%"
 call :download %MINGW32_URL% || goto :error
 set fname=%CD%\%_rv%
-call :verifyMD5Hash "%fname%" 971778e9330ae006aaeb2d63344be5f3 || goto :error
+call :verifyMD5Hash "%fname%" %md5sum% || goto :error
 call :mktemp /D || goto :error
 cd "%_rv%"
 call :UnZipFile "%CD%\%packageName%" "%fname%" || goto :error
