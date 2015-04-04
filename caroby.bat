@@ -46,7 +46,6 @@ if [%1]==[] goto argEndLoop
   )
   ::unamed argument
   set CAROBY_DIR=%~1
-  exit /b
 :argContinue
 shift
 goto argLoop
