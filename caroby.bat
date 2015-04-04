@@ -45,7 +45,7 @@ if [%1]==[] goto argEndLoop
       goto argContinue
   )
   ::unamed argument
-  set CAROBY_DIR=%~1
+  set CAROBY_DIR=%USERPROFILE%\%~1
 :argContinue
 shift
 goto argLoop
@@ -177,11 +177,9 @@ set fcivURL=http://download.microsoft.com/download/c/f/4/cf454ae0-a4bb-4123-8333
 pushd .
 cd "%DOWNLOAD_DIR%"
 call :download %fcivURL% || goto :error
-call :verifyMD5Hash "%exeName%" 58dc4df814685a165f58037499c89e76 || goto :error
-
 set exeName=%_rv%
 "%exeName%" /q /t:"%CAROBY_DIR%\bin\"
-set PATH=%CAROBY_DIR%\bin;%PATH%
+call :verifyMD5Hash "%CD%\%exeName%" 58dc4df814685a165f58037499c89e76 || goto :error
 popd
 
 :downloadAndInstall7Zip
@@ -190,7 +188,7 @@ pushd .
 cd "%DOWNLOAD_DIR%"
 call :download %zipURL% || goto :error
 set installerName=%_rv%
-call :verifyMD5Hash "%installerName%" 9bd44a22bffe0e4e0b71b8b4cf3a80e2 || goto :error
+call :verifyMD5Hash "%CD%\%installerName%" 9bd44a22bffe0e4e0b71b8b4cf3a80e2 || goto :error
 call :mktemp /D || goto :error
 msiexec /a "%installerName%" TARGETDIR="%_rv%" /q
 copy "%_rv%\Files\7-Zip\7z.dll" "%CAROBY_DIR%\bin\" > nul
@@ -202,18 +200,24 @@ set curlURL=http://www.paehl.com/open_source/?download=curl_741_0_rtmp_ssh2_ssl_
 pushd .
 cd "%DOWNLOAD_DIR%"
 call :download "%curlURL%" curl.zip || goto :error
-call :verifyMD5Hash curl.zip ac7dc67ade0ffda67589cf082a2ed17d || goto :error
+call :verifyMD5Hash "%CD%\curl.zip" ac7dc67ade0ffda67589cf082a2ed17d || goto :error
 call :unzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
 
 :createCmdShortcut
-bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat" /shortcut:cmd 
+%CAROBY_DIR%\bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat" /shortcut:cmd 
 
 :::::::::: End of script :::::::
+echo. Done.
+goto :end
 :error
 echo.
-echo ERROR:  %_err%
-if "%_err2%" neq "" echo %_err2%
+if "%_err%" neq "" (
+    echo ERROR:  %_err%
+    if "%_err2%" neq "" echo %_err2%
+) else (
+    if %errorlevel% neq 0 echo errorlevel is %errorlevel%
+)
 echo.
 popd
 endlocal
@@ -266,7 +270,10 @@ if exist %filename% (
     echo to refresh it.
     echo.
 ) else (
+    echo Downloading %filename%
+    echo from %~1
     call :wget "%~1" "%filename%"
+    echo Done.
 )
 ENDLOCAL&set _rv=%filename%
 GOTO:EOF
@@ -385,7 +392,7 @@ SET TempFile=%TempFile::=%
 SET TempFile=%TempFile:.=%
 SET TempFile=%TempFile:,=%
 :: Create a really large random number and append it to the prefix
-FOR /L %%A IN (0,1,9) DO SET TempFile=!TempFile!!Random!
+FOR /L %%A IN (0,1,2) DO SET TempFile=!TempFile!!Random!
 :: If temp file with this name already exists, try again
 IF EXIST "%Temp%.\%TempFile%" (
 	GOTO Again
