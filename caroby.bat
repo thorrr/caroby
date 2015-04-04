@@ -5,8 +5,6 @@ pushd .
 set CAROBY_DIR=%USERPROFILE%\caroby
 set DOWNLOAD_DIR=%USERPROFILE%\Downloads
 
-set PATH=%CAROBY_DIR%\bin;%PATH%
-
 :argLoop
 if [%1]==[] goto argEndLoop
   if [%1]==[/?] (
@@ -50,6 +48,8 @@ if [%1]==[] goto argEndLoop
 shift
 goto argLoop
 :argEndLoop
+
+set PATH=%CAROBY_DIR%\bin;%PATH%
 
 if not exist "%DOWNLOAD_DIR%" (
     echo ERROR:  download-dir %DOWNLOAD_DIR% doesn't exist.
@@ -205,7 +205,10 @@ call :unzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
 
 :createCmdShortcut
+pushd .
+cd "%CAROBY_DIR%"
 %CAROBY_DIR%\bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat" /shortcut:cmd 
+popd
 
 :::::::::: End of script :::::::
 echo. Done.
