@@ -10,11 +10,7 @@ set md5sum=971778e9330ae006aaeb2d63344be5f3
 set packageName=mingw
 ::setup
 call :carobyRegistry || goto :error
-::DEBUG
-@rem call :verifyPackageNotInstalled %packageName% || goto :error
-
-::DEBUG
-goto :buildInit
+call :verifyPackageNotInstalled %packageName% || goto :error
 
 ::downloadAndUnzip
 cd "%DOWNLOAD_DIR%"
