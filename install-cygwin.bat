@@ -43,10 +43,14 @@ set CYGWIN_INSTALL_DIR=%_rv%
 
 :checkForCleanup
 set CYGWIN_SHORTCUT_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Cygwin
-set CYGWIN_X_SHORTCUT_DIR=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Cygwin-X
+set CYGWIN_SHORTCUT_DIR_X=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Cygwin-X
 if not exist "%CYGWIN_SHORTCUT_DIR%" (
     set _DO_SHORTCUT_CLEANUP=true
 )
+if not exist "%CYGWIN_SHORTCUT_DIR_X%" (
+    set _DO_SHORTCUT_CLEANUP_X=true
+)
+
 
 pushd .
 cd "%DOWNLOAD_DIR%
@@ -184,9 +188,15 @@ if [%_DO_SHORTCUT_CLEANUP%] == [true] (
     if exist "%CYGWIN_SHORTCUT_DIR%" (
         echo Removing shortcuts from start menu
         rmdir /s /q "%CYGWIN_SHORTCUT_DIR%"
-        rmdir /s /q "%CYGWIN_X_SHORTCUT_DIR%"
     )
 )
+if [%_DO_SHORTCUT_CLEANUP_X%] == [true] (
+    if exist "%CYGWIN_SHORTCUT_DIR_X%" (
+        echo Removing XWindow shortcuts from start menu
+        rmdir /s /q "%CYGWIN_SHORTCUT_DIR_X%"
+    )
+)
+
 
 :::::::::: End of script :::::::
 echo. Done.
