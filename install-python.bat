@@ -80,6 +80,15 @@ set pythonDir=%_rv%
 :: we need PYTHON_DIR to support relocate-python.bat
 >>"%initName%" echo set PYTHON_DIR=%pythonDir%
 
+::setupTools
+pushd .
+cd "%DOWNLOAD_DIR%
+call :download https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py || goto :error
+"%installDir%\python.exe" ez_setup.py
+"%installDir%\Scripts\easy_install.exe" pip
+"%installDir%\Scripts\easy_install.exe" virtualenv
+popd.
+
 ::create relocate-python.bat
 set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >"%rpbat%" echo @echo off
