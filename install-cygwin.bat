@@ -162,6 +162,9 @@ set updateShims=%cygbinpath%\update-shims.bat
 >>"%updateShims%" echo    copy "%%TMP%%\shim-with-convert-args.bat" "%cygdir%\shims\%%%%a.bat" ^>nul
 >>"%updateShims%" echo )
 
+:: call update-shims.bat once to set up our shims
+"%cygbinpath%\update-shims.bat"
+
 :: create install-apt-cyg.sh
 set iac=%cygbinpath%\install-apt-cyg.sh
 >"%iac%" echo #!/bin/bash
