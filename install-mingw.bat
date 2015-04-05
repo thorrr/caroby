@@ -10,8 +10,11 @@ set md5sum=971778e9330ae006aaeb2d63344be5f3
 set packageName=mingw
 ::setup
 call :carobyRegistry || goto :error
+::DEBUG
+@rem call :verifyPackageNotInstalled %packageName% || goto :error
 
-call :verifyPackageNotInstalled %packageName% || goto :error
+::DEBUG
+goto :buildInit
 
 ::downloadAndUnzip
 cd "%DOWNLOAD_DIR%"
@@ -39,6 +42,16 @@ for /f "tokens=1,2" %%a in ('mingw-get list') do (
         mingw-get install %%b
     )
 )
+
+:buildInit
+call :initPath %packageName% || goto :error
+mkdir "%_rv%"
+set initName=%_rv%\mingw-init.bat
+call :installPathRelative %packageName% || goto :error
+set mingwDir=%_rv%
+>"%initName%" echo @echo off
+>>"%initName%" echo.
+>>"%initName%" echo set PATH=%mingwDir%\bin;%%PATH%%
 
 
 :::::::::: End of script ::::::::::
@@ -277,6 +290,17 @@ GOTO:EOF
 SETLOCAL
 call :verifyInCarobyEnvironment
 set _rv=%CAROBY_DIR%\packages\%1
+ENDLOCAL&set _rv=%_rv%&set _err=%_err%
+if "%_err%" neq "" exit /b 1
+GOTO:EOF
+
+:installPathRelative    -- return this package's path to its installation.  With %%CAROBY_DIR%% as the base.
+::                      -- %1: package name
+::use this for init scripts that need to access their relative location.  For install scripts use :installPath
+
+SETLOCAL
+call :verifyInCarobyEnvironment
+set _rv=%%CAROBY_DIR%%\packages\%1
 ENDLOCAL&set _rv=%_rv%&set _err=%_err%
 if "%_err%" neq "" exit /b 1
 GOTO:EOF
