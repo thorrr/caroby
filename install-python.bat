@@ -7,12 +7,12 @@ set PYTHON_VERSION=2.7.6
 set md5sum=b73f8753c76924bc7b75afaa6d304645
 :::::::::::::::::::::::::::::::::
 set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
-set PYTHON_START_MENU_LOCATION="%APPDATA%\Microsoft\Windows\Start Menu\Programs\Python %PYTHON_MAJOR_VERSION%"
+set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Python %PYTHON_MAJOR_VERSION%
 set packageName=python-%PYTHON_VERSION%
 :::::::::::::::::::::::::::::::::
 
 :checkForCleanup
-if not exist %PYTHON_START_MENU_LOCATION% (
+if not exist "%PYTHON_START_MENU_LOCATION%" (
     set _DO_SHORTCUT_CLEANUP=true
 )
 
@@ -62,9 +62,9 @@ popd
 
 ::shortcutCleanup
 if [%_DO_SHORTCUT_CLEANUP%] == [%_DO_SHORTCUT_CLEANUP%] (
-    if exist %PYTHON_START_MENU_LOCATION% (
-        del /q %PYTHON_START_MENU_LOCATION%
-        rmdir /s /q %PYTHON_START_MENU_LOCATION%
+    if exist "%PYTHON_START_MENU_LOCATION%" (
+        del /q "%PYTHON_START_MENU_LOCATION%"
+        rmdir /s /q "%PYTHON_START_MENU_LOCATION%"
     )
 )
 
