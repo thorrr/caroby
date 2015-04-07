@@ -7,6 +7,7 @@ ImageMagick-doc,^
 ORBit2,^
 OpenSP,^
 R,^
+TeXmacs,^
 WindowMaker,^
 WordNet,^
 XmHTML,^
@@ -220,6 +221,7 @@ damageproto,^
 dash,^
 db,^
 db-doc,^
+dblatex,^
 dbus,^
 dbus-bash-completion,^
 dbus-doc,^
@@ -270,6 +272,7 @@ editres,^
 editrights,^
 emacs,^
 emacs-X11,^
+emacs-auctex,^
 emacs-cmake,^
 emacs-el,^
 emacs-gettext,^
@@ -1928,6 +1931,20 @@ tcsh,^
 tdb,^
 ted,^
 terminfo,^
+texi2html,^
+texinfo,^
+texlive,^
+texlive-collection-basic,^
+texlive-collection-bibtexextra,^
+texlive-collection-binextra,^
+texlive-collection-fontsrecommended,^
+texlive-collection-fontutils,^
+texlive-collection-htmlxml,^
+texlive-collection-latex,^
+texlive-collection-latexextra,^
+texlive-collection-latexrecommended,^
+texlive-collection-mathextra,^
+texlive-collection-pictures,^
 tftp,^
 tftp-server,^
 tidy,^
