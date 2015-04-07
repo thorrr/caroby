@@ -5,9 +5,12 @@ pushd .
 set CAROBY_DIR=%USERPROFILE%\caroby
 set DOWNLOAD_DIR=%USERPROFILE%\Downloads
 
+if [%1]==[] goto :help
+
 :argLoop
 if [%1]==[] goto argEndLoop
   if [%1]==[/?] (
+      :help
       echo Install caroby.
       echo.
       echo   Usage:
