@@ -4,7 +4,8 @@ setlocal
 pushd .
 :: User modifiable ::::::::::::::
 set PYTHON_VERSION=2.7.6
-set md5sum=b73f8753c76924bc7b75afaa6d304645
+set md5sum_x64=b73f8753c76924bc7b75afaa6d304645
+set md5sum_x32=ac54e14f7ba180253b9bae6635d822ea
 :::::::::::::::::::::::::::::::::
 set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
 set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Python %PYTHON_MAJOR_VERSION%
@@ -17,6 +18,7 @@ if not exist "%PYTHON_START_MENU_LOCATION%" (
 )
 
 set bits=.amd64
+set md5sum=%md5sum_x64%
 :argLoop
 if [%1]==[] goto argEndLoop
   if [%1]==[/?] (
@@ -35,6 +37,7 @@ if [%1]==[] goto argEndLoop
       echo 32bit installation selected
       echo.
       set bits=
+      set md5sum=%md5sum_x32%
       goto argContinue
   )
 :argContinue
