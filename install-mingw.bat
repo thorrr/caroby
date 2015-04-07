@@ -38,6 +38,8 @@ for /f "tokens=1,2" %%a in ('mingw-get list') do (
         mingw-get install %%b
     )
 )
+::zlib gets messed up somehow
+mingw-get install zlib
 
 :buildInit
 call :initPath %packageName% || goto :error
