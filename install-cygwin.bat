@@ -51,7 +51,6 @@ if not exist "%CYGWIN_SHORTCUT_DIR_X%" (
     set _DO_SHORTCUT_CLEANUP_X=true
 )
 
-
 pushd .
 cd "%DOWNLOAD_DIR%
 call :download %SETUPURL% || goto :error
@@ -60,30 +59,32 @@ popd
 :postSetup
 :: generate install script
 call :mktemp || goto :error
-set instFile="%_rv%.bat"
->%instFile%  echo ::
->>%instFile% echo "%DOWNLOAD_DIR%\%SETUPEXE%" ^^
->>%instFile% echo --no-admin ^^
->>%instFile% echo --no-shortcuts ^^
->>%instFile% echo --quiet-mode ^^
->>%instFile% echo --root "%CYGWIN_INSTALL_DIR%" ^^
->>%instFile% echo --local-package-dir "%DOWNLOAD_DIR%\cygwin-packages" ^^
->>%instFile% echo --site http://www.gtlib.gatech.edu/pub/cygwin/ ^^
->>%instFile% echo --packages ^^
+set instFile=%_rv%.bat
+>"%instFile%"  echo ::
+>>"%instFile%" echo "%DOWNLOAD_DIR%\%SETUPEXE%" ^^
+>>"%instFile%" echo --no-admin ^^
+>>"%instFile%" echo --no-shortcuts ^^
+>>"%instFile%" echo --no-startmenu ^^
+>>"%instFile%" echo --no-desktop ^^
+>>"%instFile%" echo --quiet-mode ^^
+>>"%instFile%" echo --root "%CYGWIN_INSTALL_DIR%" ^^
+>>"%instFile%" echo --local-package-dir "%DOWNLOAD_DIR%\cygwin-packages" ^^
+>>"%instFile%" echo --site http://www.gtlib.gatech.edu/pub/cygwin/ ^^
+>>"%instFile%" echo --packages ^^
 
 :: how to generate an installed package list from an existing installation
 :: sed -e '1d' -e 's/ .*$//' -e 's/$/,^/' /etc/setup/installed.db > installed-packages.txt
->>%instFile% type installed-packages.txt
->>%instFile% echo IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
+>>"%instFile%" type installed-packages.txt
+>>"%instFile%" echo IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
 
 call "%instFile%" >nul || goto :cyginstallerror
 goto :aftercyginstall
 :cyginstallerror
 set _err=Error installing cygwin.  To see log do
-set _err2=notepad %CYGWIN_INSTALL_DIR%\var\log\setup.log.full
+set _err2=notepad "%CYGWIN_INSTALL_DIR%\var\log\setup.log.full"
 goto :error
 :aftercyginstall
-
+ 
 :: copy setup.exe so we can update cygwin inside the caroby environment
 copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%CYGWIN_INSTALL_DIR%\setup.exe"
 
