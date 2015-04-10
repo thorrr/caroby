@@ -3,43 +3,94 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
+::from http://sourceforge.net/projects/mingw/files/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/
 set MINGW32_URL=http://iweb.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
-set md5sum=971778e9330ae006aaeb2d63344be5f3
+::from http://sourceforge.net/projects/tdm-gcc/files/TDM-GCC%20Installer/
+:: every % in the URL has to be escaped eight times (!)
+set MINGW64_URL=http://softlayer-dal.dl.sourceforge.net/project/tdm-gcc/TDM-GCC^^^^^^^^^^^^^^^^%%%%%%%%%%%%%%%%20Installer/tdm64-gcc-4.9.2-3.exe
+set md5sum32=971778e9330ae006aaeb2d63344be5f3
+set md5sum64=72e59406d0fe799e440dedc175ca4b0f
 :::::::::::::::::::::::::::::::::
 
-set packageName=mingw
+set md5sum=%md5sum64%
+set bits=64
+
+if [%1]==[] goto :help
+:argLoop
+if [%1]==[] goto argEndLoop
+  if [%1]==[/?] (
+      :help
+      echo Install mingw.
+      echo.
+      echo %~nx0 [/32 ^| /64]
+      echo.
+      echo          defaults:  /64
+      echo.
+      echo   /32              install 32 bit
+      echo   /64              install 64 bit
+      exit /b
+  )
+  if [%1]==[/32] (
+      echo.
+      echo 32bit installation selected
+      echo.
+      set bits=32
+      set md5sum=%md5sum32%
+      set url=%MINGW32_URL%
+      goto argContinue
+  )
+  if [%1]==[/64] (
+      echo.
+      echo 64bit installation selected
+      echo.
+      set bits=64
+      set md5sum=%md5sum64%
+      set url=%MINGW64_URL%
+      goto argContinue
+  )
+
+:argContinue
+shift
+goto argLoop
+:argEndLoop
+
+set packageName=mingw-w%bits%
+
 ::setup
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
 
 ::downloadAndUnzip
 cd "%DOWNLOAD_DIR%"
-call :download %MINGW32_URL% || goto :error
+call :download %url% || goto :error
 set fname=%CD%\%_rv%
 call :verifyMD5Hash "%fname%" %md5sum% || goto :error
 call :mktemp /D || goto :error
 cd "%_rv%"
-call :UnZipFile "%CD%\%packageName%" "%fname%" || goto :error
+7z x "%fname%"
 
 ::install
 call :installPath %packageName%
 set installDir=%_rv%
-xcopy /s/e/i "%CD%\%packageName%" "%installDir%" > nul
+xcopy /s/e/i "%CD%\%packageName%" "%installDir%"
 
 ::update
 set PATH=%installDir%\bin;%PATH%
-:: avoid annoying profile.xml not found error
-copy %installDir%\var\lib\mingw-get\data\defaults.xml %installDir%\var\lib\mingw-get\data\profile.xml >nul
-mingw-get update || goto :error
 
-::installPackages
-for /f "tokens=1,2" %%a in ('mingw-get list') do (
-    if [%%a]==[Package:] (
-        mingw-get install %%b
+if [%bits%] == [32] (
+    :: avoid annoying profile.xml not found error
+    copy %installDir%\var\lib\mingw-get\data\defaults.xml %installDir%\var\lib\mingw-get\data\profile.xml >nul
+    mingw-get update || goto :error
+    
+    ::installPackages
+    for /f "tokens=1,2" %%a in ('mingw-get list') do (
+        if [%%a]==[Package:] (
+            mingw-get install %%b
+        )
     )
+    ::zlib gets messed up somehow
+    mingw-get install zlib
 )
-::zlib gets messed up somehow
-mingw-get install zlib
 
 :buildInit
 call :initPath %packageName% || goto :error
@@ -141,7 +192,8 @@ if exist %filename% (
     echo.
 ) else (
     echo Downloading %filename%
-    call :wget %~1 "%filename%"
+    echo Downloading from %1
+    call :wget %1 "%filename%"
     echo Done.
 )
 ENDLOCAL&set _rv=%filename%
@@ -250,7 +302,7 @@ echo End if>> %_rv%.vbs
 echo Set objXMLHTTP = Nothing>> %_rv%.vbs
 echo WScript.Quit>> %_rv%.vbs
 
-call %_rv%.vbs %~1 %2
+call %_rv%.vbs %1 %2
 
 if %errorlevel% neq 0 (exit /b 1)
 GOTO:EOF
