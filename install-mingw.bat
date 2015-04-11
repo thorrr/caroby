@@ -60,21 +60,38 @@ set packageName=mingw-w%bits%
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
 
-::downloadAndUnzip
+::download, unzip, and move to installDir
+pushd .
 cd "%DOWNLOAD_DIR%"
 call :download %url% || goto :error
 set fname=%CD%\%_rv%
 call :verifyMD5Hash "%fname%" %md5sum% || goto :error
 call :mktemp /D || goto :error
 cd "%_rv%"
-7z x "%fname%"
-
-::install
+7z x "%fname%" -o"%CD%\%packageName%" >nul || goto :error
+if [%bits%] == [64] (
+    echo Extracting.
+    cd "%packageName%"
+    for /f "tokens=*" %%G in ('dir /s/b *.lzma *.xz') do (
+        7z x -y "%%G" >nul || goto :error
+    )
+    for /f "tokens=*" %%G in ('dir /s/b *.tar') do (
+        7z x -y "%%G" >nul || goto :error
+    )
+    rmdir /s /q $1
+    rmdir /s /q $PLUGINSDIR
+    rmdir /s /q $[51]
+    del *.tar
+    echo Done.
+    cd ..
+)
 call :installPath %packageName%
 set installDir=%_rv%
-xcopy /s/e/i "%CD%\%packageName%" "%installDir%"
+move "%CD%\%packageName%" "%installDir%" >nul || goto :error
+echo Done.
+popd
 
-::update
+::finish 32bit installation
 set PATH=%installDir%\bin;%PATH%
 
 if [%bits%] == [32] (
@@ -100,7 +117,7 @@ call :installPathRelative %packageName% || goto :error
 set mingwDir=%_rv%
 >"%initName%" echo @echo off
 >>"%initName%" echo.
->>"%initName%" echo set PATH=%mingwDir%\bin;%%PATH%%
+>>"%initName%" echo set PATH=%mingwDir%\x86_64-w64-mingw32\bin;%mingwDir%\bin;%%PATH%%
 
 
 :::::::::: End of script ::::::::::
