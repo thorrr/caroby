@@ -86,7 +86,7 @@ goto :error
 :aftercyginstall
  
 :: copy setup.exe so we can update cygwin inside the caroby environment
-copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%CYGWIN_INSTALL_DIR%\setup.exe"
+copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%CYGWIN_INSTALL_DIR%\"
 
 :mkshortcuts
 pushd .
