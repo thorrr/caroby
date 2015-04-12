@@ -51,7 +51,7 @@ copy "%_rv%\bin\*" "%packageDir%\bin" >nul
 pushd .
 cd /d %CAROBY_DIR%
 call :shortInstallPath %packageName% || goto :error
-bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat %_rv%\bin\emacs.exe" /shortcut:emacs
+bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat %_rv%\bin\runemacs.exe" /shortcut:emacs
 popd
 
 
