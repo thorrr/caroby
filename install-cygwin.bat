@@ -92,7 +92,7 @@ copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%CYGWIN_INSTALL_DIR%\"
 pushd .
 cd /d %CAROBY_DIR%
 :: create shortcuts for a bash shell
-bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat bash --login -i -c 'mkpasswd -c > /etc/passwd; mkgroup -c > /etc/group; cd ~/; exec /bin/bash'" /shortcut:bash
+bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat bash --login -i -c 'cd ~/; exec /bin/bash'" /shortcut:bash
 popd
 
 :: build cygwin's init file
@@ -164,28 +164,36 @@ set updateShims=%cygbinpath%\update-shims.bat
 >>"%updateShims%" echo )
 
 :: call update-shims.bat once to set up our shims
-"%cygbinpath%\update-shims.bat"
+call "%cygbinpath%\update-shims.bat"
 
-:: create install-apt-cyg.sh
+:: create install-apt-cyg.sh and run it
 set iac=%cygbinpath%\install-apt-cyg.sh
 >"%iac%" echo #!/bin/bash
 >>"%iac%" echo cd /tmp
+>>"%iac%" echo rm -rf apt-cyg/
 >>"%iac%" echo git clone https://github.com/rcmdnk/apt-cyg.git
 >>"%iac%" echo cp apt-cyg/apt-cyg "$CYGBINPATH"
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix $(/usr/bin/cygpath -u $cygbinpath/install-apt-cyg.sh)'
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c 'PATH=/usr/bin CYGBINPATH=$(/usr/bin/cygpath -u $cygbinpath) $(/usr/bin/cygpath -u $cygbinpath/install-apt-cyg.sh)'
 
-:: create install-fakecygpty
+:: create install-fakecygpty and run it
 set ifcpty=%cygbinpath%\install-fakecygpty.sh
 >"%ifcpty%" echo #!/bin/bash
 >>"%ifcpty%" echo cd /tmp
 >>"%ifcpty%" echo wget https://github.com/Shougo/fakecygpty/raw/master/fakecygpty.c
 >>"%ifcpty%" echo gcc -o fakecygpty.exe fakecygpty.c
 >>"%ifcpty%" echo cp fakecygpty.exe "$CYGBINPATH"
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix $(/usr/bin/cygpath -u $cygbinpath/install-fakecygpty.sh)'
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c 'PATH=/usr/bin CYGBINPATH=$(/usr/bin/cygpath -u $cygbinpath) $(/usr/bin/cygpath -u $cygbinpath/install-fakecygpty.sh)'
 
 :: create cygwin-list-installed-packages.bat
 set clip=%cygbinpath%\cygwin-list-installed-packages.bat
 >"%clip%" echo @echo off
 >>"%clip%" echo.
 >>"%clip%" echo bash -c "sed -e '1d' -e 's/ .*$//' -e 's/$/,^^/' /etc/setup/installed.db > installed-packages.txt"
+
+:: make /etc/passwd and /etc/group work correctly
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/mkpasswd -l -p "$(/usr/bin/cygpath -H)" ^> /etc/passwd; /usr/bin/mkgroup -c ^> /etc/group'
 
 :: get rid of start menu shortcuts
 if [%_DO_SHORTCUT_CLEANUP%] == [true] (
@@ -200,7 +208,6 @@ if [%_DO_SHORTCUT_CLEANUP_X%] == [true] (
         rmdir /s /q "%CYGWIN_SHORTCUT_DIR_X%"
     )
 )
-
 
 :::::::::: End of script :::::::
 echo. Done.
