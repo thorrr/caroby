@@ -6,7 +6,7 @@ pushd .
 ::from http://sourceforge.net/projects/mingw/files/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/
 set MINGW32_URL=http://iweb.dl.sourceforge.net/project/mingw/Installer/mingw-get/mingw-get-0.6.2-beta-20131004-1/mingw-get-0.6.2-mingw32-beta-20131004-1-bin.zip
 ::from http://sourceforge.net/projects/tdm-gcc/files/TDM-GCC%20Installer/
-:: every % in the URL has to be escaped eight times (!)
+:: every % in the URL has to be escaped sixteen times (!)
 set MINGW64_URL=http://softlayer-dal.dl.sourceforge.net/project/tdm-gcc/TDM-GCC^^^^^^^^^^^^^^^^%%%%%%%%%%%%%%%%20Installer/tdm64-gcc-4.9.2-3.exe
 set md5sum32=971778e9330ae006aaeb2d63344be5f3
 set md5sum64=72e59406d0fe799e440dedc175ca4b0f
