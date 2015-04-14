@@ -4,12 +4,11 @@ setlocal
 pushd .
 :: User modifiable ::::::::::::::
 set PYTHON_VERSION=2.7.6
+set PYWIN32VERSION=219
 set md5sum_x64=b73f8753c76924bc7b75afaa6d304645
 set md5sum_x32=ac54e14f7ba180253b9bae6635d822ea
-:::::::::::::::::::::::::::::::::
-set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
-set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Python %PYTHON_MAJOR_VERSION%
-set packageName=python-%PYTHON_VERSION%
+set md5sum_pywin32_x64=ff7e69429ef38c15088906314cb11f93
+set md5sum_pywin32_x32=f270e9f88155f649fc1a6c2f85aa128d
 :::::::::::::::::::::::::::::::::
 
 :checkForCleanup
@@ -18,7 +17,10 @@ if not exist "%PYTHON_START_MENU_LOCATION%" (
 )
 
 set bits=.amd64
+set pywin32bits=-amd64
+set arch=_x64
 set md5sum=%md5sum_x64%
+set pywin32_md5sum=%md5sum_pywin32_x64%
 :argLoop
 if [%1]==[] goto argEndLoop
   if [%1]==[/?] (
@@ -37,7 +39,10 @@ if [%1]==[] goto argEndLoop
       echo 32bit installation selected
       echo.
       set bits=
+      set pywin32bits=32
+      set arch=_x86
       set md5sum=%md5sum_x32%
+      set pywin32_md5sum=%md5sum_pywin32_x32%
       goto argContinue
   )
 :argContinue
@@ -45,7 +50,12 @@ shift
 goto argLoop
 :argEndLoop
 
+set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
+set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Python %PYTHON_MAJOR_VERSION%
+set packageName=python-%PYTHON_VERSION%%arch%
+
 set URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%%bits%.msi
+set PYWIN32URL=http://hivelocity.dl.sourceforge.net/project/pywin32/pywin32/Build^^^^^^^^%%%%%%%%20%PYWIN32VERSION%/pywin32-%PYWIN32VERSION%.win%pywin32bits%-py2.7.exe
 
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
@@ -56,6 +66,11 @@ cd "%DOWNLOAD_DIR%
 call :download %URL% || goto :error
 set msiFile=%_rv%
 call :verifyMD5Hash "%CD%\%msiFile%" %md5sum% || goto :error
+
+call :download %PYWIN32URL% || goto :error
+set pywin32File=%_rv%
+call :verifyMD5Hash "%CD%\%pywin32File%" %pywin32_md5sum% || goto :error
+
 call :installPath %packageName%
 set installDir=%_rv%
 echo Installing...
@@ -90,6 +105,8 @@ call :download https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py |
 "%installDir%\python.exe" ez_setup.py
 "%installDir%\Scripts\easy_install.exe" pip
 "%installDir%\Scripts\easy_install.exe" virtualenv
+::finally, install pywin32
+"%installDir%\Scripts\easy_install.exe" "%pywin32File%
 popd.
 
 ::create relocate-python.bat
