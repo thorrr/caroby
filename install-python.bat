@@ -55,7 +55,8 @@ set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\P
 set packageName=python-%PYTHON_VERSION%%arch%
 
 set URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%%bits%.msi
-set PYWIN32URL=http://hivelocity.dl.sourceforge.net/project/pywin32/pywin32/Build^^^^^^^^%%%%%%%%20%PYWIN32VERSION%/pywin32-%PYWIN32VERSION%.win%pywin32bits%-py2.7.exe
+::http://hivelocity.dl.sourceforge.net/project/pywin32/pywin32/Build%20219/pywin32-219.win-amd64-py2.7.exe
+set PYWIN32URL=http://hivelocity.dl.sourceforge.net/project/pywin32/pywin32/Build^^^^^^^^^^^^^^%%%%%%%%%%%%%%%%20%PYWIN32VERSION%/pywin32-%PYWIN32VERSION%.win%pywin32bits%-py2.7.exe
 
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
