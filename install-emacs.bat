@@ -6,7 +6,7 @@ pushd .
 set emacsVersion=24.4
 set zlibVersion=1.2.7-1
 set pngVersion=1.4.3-1
-::set emacsMD5=06033dc7a9869dacb10299a8df99b9c2
+::set emacsMD5=06033dc7a9869dacb10299a8df99b9c2  ::for version 24.3
 set emacsMD5=39a74019f10739b7563af733cb379902
 set zlibMD5=f7cdd2d5a7b2645ac9bc8b981b596de5
 set pngMD5=44ee062641a204f65f0e96720fe57282
