@@ -105,8 +105,8 @@ if [%bits%] == [32] (
             mingw-get install %%b
         )
     )
-    ::zlib gets messed up somehow
-    mingw-get install zlib
+    ::libz gets messed up somehow
+    mingw-get install libz --reinstall
 )
 
 :buildInit

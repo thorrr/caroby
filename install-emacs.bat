@@ -3,16 +3,23 @@
 setlocal
 pushd .
 :: User modifiable ::::::::::::::
-set emacsVersion=24.3
+set emacsVersion=24.4
 set zlibVersion=1.2.7-1
 set pngVersion=1.4.3-1
-set emacsMD5=06033dc7a9869dacb10299a8df99b9c2
+::set emacsMD5=06033dc7a9869dacb10299a8df99b9c2  ::for version 24.3
+set emacsMD5=39a74019f10739b7563af733cb379902
 set zlibMD5=f7cdd2d5a7b2645ac9bc8b981b596de5
 set pngMD5=44ee062641a204f65f0e96720fe57282
 :::::::::::::::::::::::::::::::::
 
+if %emacsVersion% geq 24.4 (
+    set urlStub=i686-pc-mingw32
+) else (
+    set urlStub=i386
+)
+
 set packageName=emacs-%emacsVersion%
-set emacsUrl=http://mirrors.kernel.org/gnu/emacs/windows/emacs-%emacsVersion%-bin-i386.zip
+set emacsUrl=http://mirrors.kernel.org/gnu/emacs/windows/emacs-%emacsVersion%-bin-%urlStub%.zip
 set zlibUrl=http://win32builder.gnome.org/packages/3.6/zlib_%zlibVersion%_win32.zip
 set libpngUrl=http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/libpng_%pngVersion%_win32.zip
 
@@ -37,15 +44,27 @@ call :verifyMD5Hash "%CD%\%pngZip%" %pngMD5% || goto :error
 popd
 
 ::unzipAndInstall
+pushd .
 call :installPath %packageName%
 set packageDir=%_rv%
 call :mktemp /D || goto :error
-call :UnZipFile "%_rv%" "%DOWNLOAD_DIR%\%emacsZip%" || goto :error
-move "%_rv%\emacs-%emacsVersion%" "%packageDir%" >nul
+set tmp=%_rv%\tmp
+call :UnZipFile "%tmp%" "%DOWNLOAD_DIR%\%emacsZip%" || goto :error
+cd "%tmp%"
+::pre 24.4 zip files have emacs-%emacsVersion% as a top level folder in the zip
+move emacs-%emacsVersion% tmp 2>nul
+cd tmp 2>nul
+cd ..
+move "%CD%\tmp" "%packageDir%" >nul || goto :error
+popd
 
+call :mktemp /D || goto :error
 call :UnZipFile "%_rv%" "%DOWNLOAD_DIR%\%zlibZip%" || goto :error
+copy "%_rv%\bin\*" "%packageDir%\bin\" >nul
+
+call :mktemp /D || goto :error
 call :UnZipFile "%_rv%" "%DOWNLOAD_DIR%\%pngZip%" || goto :error
-copy "%_rv%\bin\*" "%packageDir%\bin" >nul
+copy "%_rv%\bin\*" "%packageDir%\bin\" >nul
 
 :mkshortcut
 pushd .
@@ -53,7 +72,6 @@ cd /d %CAROBY_DIR%
 call :shortInstallPath %packageName% || goto :error
 bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat %_rv%\bin\runemacs.exe" /shortcut:emacs
 popd
-
 
 :::::::::: End of script :::::::
 echo. Done.
