@@ -113,7 +113,7 @@ set _f="%CAROBY_DIR%\make-shortcut.bat"
 >>%_f% echo pushd .
 >>%_f% echo cd %%~dp0
 >>%_f% echo set _DIR=%%CD%%\
->>%_f% echo set ARG=%%1
+>>%_f% echo set ARG=%%~1
 >>%_f% echo if [%%2]==[] (
 >>%_f% echo     set SHORTCUT_NAME=%%~n1
 >>%_f% echo ) else (
@@ -123,7 +123,7 @@ set _f="%CAROBY_DIR%\make-shortcut.bat"
 >>%_f% echo ::strip out the current directory name from the argument, which is a full path
 >>%_f% echo setlocal enabledelayedexpansion
 >>%_f% echo set RELARG=!ARG:%%_DIR%%=!
->>%_f% echo %%_DIR%%\bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat %%RELARG%%" /shortcut:"%%SHORTCUT_NAME%%"
+>>%_f% echo %%_DIR%%\bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat ^'%%RELARG%%^' " /shortcut:"%%SHORTCUT_NAME%%"
 >>%_f% echo endlocal
 >>%_f% echo popd
 
@@ -167,8 +167,7 @@ set _f="%CAROBY_DIR%\bin\caroby-init.bat"
 >>%_f% echo      goto :end
 >>%_f% echo )
 >>%_f% echo. 
->>%_f% echo shift
->>%_f% echo start /b %%*
+>>%_f% echo start "%%~n1" /b %%*
 >>%_f% echo goto :end
 >>%_f% echo. 
 >>%_f% echo :end
