@@ -8,8 +8,8 @@ set eclipseUrl=http://ftp.osuosl.org/pub/eclipse//technology/epp/downloads/relea
 set eclipseMD5=d27e38f21352bfea03749319bf499dea
 @rem set pydevUrl=http://iweb.dl.sourceforge.net/project/pydev/pydev/PyDev%203.2.0/PyDev%203.2.0.zip
 :: can't figure out how to escape the percent signs all the way down to the wget call
-set pydevUrl=http://bit.ly/1DKWHle
-set pydevMD5=4ddd60b0adc688fe78fa3fc412ef7639
+set pydevUrl=http://bit.ly/1GGHt0g
+set pydevMD5=eb19e3c628c5a2577b6086c56d66107b
 :::::::::::::::::::::::::::::::::
 
 
