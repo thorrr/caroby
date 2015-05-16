@@ -115,6 +115,8 @@ set cygdir=%_rv%
 >>"%fname%" echo :: you can do rm -rf /tmp because this is either cygwin's (empty) tmp dir or a symbolic link to Temp
 >>"%fname%" echo bash -c 'rm -rf /tmp ^&^& ln -s "%%_TD%%" /tmp'
 >>"%fname%" echo bash -c 'for d in `ls /cygdrive`; do if [ ! -e "/$d" ]; then ln -s /cygdrive/$d /; fi; done'
+>>"%fname%" echo :: make /etc/passwd and /etc/group work correctly
+>>"%fname%" echo bash -c '/usr/bin/mkpasswd -l -p "$(/usr/bin/cygpath -H)" ^^^> /etc/passwd; /usr/bin/mkgroup -c ^^^> /etc/group'
 >>"%fname%" echo set HOME=%%USERPROFILE%%
 
 :: create the other cygwin bin path and put update-shims.bat into it
