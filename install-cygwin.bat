@@ -107,7 +107,7 @@ set cygdir=%_rv%
 >"%fname%"  echo @echo off
 >>"%fname%" echo.
 >>"%fname%" echo set CYGBINPATH=%cygdir%\bin-extra
->>"%fname%" echo set PATH=%cygdir%\bin-extra;%cygdir%\bin;%cygdir%\shims;%%PATH%%
+>>"%fname%" echo set PATH=%cygdir%\bin-extra;%cygdir%\bin;%cygdir%\usr\sbin;%cygdir%\shims;%%PATH%%
 >>"%fname%" echo set IGNOREEOF=true
 >>"%fname%" echo set DISPLAY=:0
 >>"%fname%" echo set CYGWIN=nodosfilewarning
