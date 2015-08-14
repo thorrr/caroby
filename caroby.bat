@@ -163,6 +163,7 @@ set _f="%CAROBY_DIR%\bin\caroby-init.bat"
 >>%_f% echo.
 >>%_f% echo :: command line argument is command to run in the caroby environment.  run cmd.exe by default.
 >>%_f% echo if [%%1] == [] (
+>>%_f% echo      cd %%USERPROFILE%%
 >>%_f% echo      cmd.exe
 >>%_f% echo      goto :end
 >>%_f% echo )
