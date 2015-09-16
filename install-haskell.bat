@@ -47,10 +47,13 @@ set haskellDir=%_rv%
 
 :: create a unix-like default cabal location ~/.cabal
 :: rather than the roaming profile location, %APPDATA%\cabal
-
-:: first, source in the haskell path and call cabal user-config diff to create the default file at ~/.cabal/config
-echo Setting up cabal
+:createGoodCabalConfig
+:: source in the haskell path
 call "%initName%"
+:: initialize ghc's local package database
+ghc-pkg init "%GHC_PACKAGE_PATH%"
+:: then call cabal user-config diff to create the default file at ~/.cabal/config
+echo Setting up cabal
 cabal user-config diff || goto :error
 
 :: now do the substitutions
@@ -58,15 +61,24 @@ call :installPath %packageName% || goto :error
 set haskellPath=%_rv%
 call :mktemp || goto :error
 set tmpfile=%_rv%
+call :mktemp || goto :error
+set tmpfile2=%_rv%
+call :mktemp || goto :error
+set tmpfile3=%_rv%
 
 set cabalDir=%USERPROFILE%\.cabal
 set cabalConfig=%cabalDir%\config
 set defaultCabalDir=%APPDATA%\cabal
 
-:: replace roaming profile with ~/.cabal
+:: replace all remaining roaming profile paths with ~/.cabal
 call :replaceStringInFile "%cabalConfig%" "%tmpfile%" "%defaultCabalDir%" "%cabalDir%" || goto :error
-:: now get rid of the horrific hardcoded 'c:\Program Files' line
-call :replaceStringInFile "%tmpfile%" "%cabalConfig%" "c:\Program Files\Haskell" "%haskellPath%" || goto :error
+:: now fix install-dirs global
+call :replaceStringInFile "%tmpfile%" "%tmpfile2%" "-- prefix: c:\Program Files\Haskell" "   prefix: %haskellPath%" || goto :error
+:: "" "" install-dirs user
+call :replaceStringInFile "%tmpfile2%" "%tmpfile3%" "-- prefix: %cabalDir%" "   prefix: %cabalDir%" || goto :error
+:: add logs-dir
+call :replaceStringInFile "%tmpfile3%" "%cabalConfig%" "-- logs-dir: %cabalDir%" "logs-dir: %cabalDir%" || goto :error
+
 
 :::::::::: End of script :::::::
 echo. Done.
