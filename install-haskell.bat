@@ -3,7 +3,7 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set haskellUrl=http://www.haskell.org/platform/download/2013.2.0.0/HaskellPlatform-2013.2.0.0-setup.exe
+set haskellUrl=https://www.haskell.org/platform/download/7.10.2/HaskellPlatform-7.10.2-x86_64-setup.exe
 set packageName=haskell
 :::::::::::::::::::::::::::::::::
 
@@ -16,7 +16,7 @@ cd "%DOWNLOAD_DIR%
 echo Downloading ^(may take a while^)
 call :download %haskellUrl% || goto :error
 set exeName=%_rv%
-call :verifyMD5Hash "%CD%\%exeName%" ffd0c700b869058929fa28de4fa0253f || goto :error
+call :verifyMD5Hash "%CD%\%exeName%" 7497c6e977879f0e145765a8afbc603a || goto :error
 popd
 
 ::unzipAndInstall
