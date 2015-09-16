@@ -42,7 +42,31 @@ call :installPathRelative %packageName% || goto :error
 set haskellDir=%_rv%
 >"%initName%" echo @echo off
 >>"%initName%" echo.
->>"%initName%" echo set PATH=%%PATH%%;%haskellDir%\bin;%haskellDir%\lib;%haskellDir%\lib\extralibs\bin;%haskellDir%\mingw\bin;%haskellDir%\code;%haskellDir%\cabal\bin
+>>"%initName%" echo set PATH=%%PATH%%;%haskellDir%\bin;%haskellDir%\lib;%haskellDir%\lib\extralibs\bin;%haskellDir%\mingw\bin;%haskellDir%\code
+>>"%initName%" echo set CABAL_CONFIG=%%USERPROFILE%%\.cabal\config
+
+:: create a unix-like default cabal location ~/.cabal
+:: rather than the roaming profile location, %APPDATA%\cabal
+
+:: first, source in the haskell path and call cabal user-config diff to create the default file at ~/.cabal/config
+echo Setting up cabal
+call "%initName%"
+cabal user-config diff || goto :error
+
+:: now do the substitutions
+call :installPath %packageName% || goto :error
+set haskellPath=%_rv%
+call :mktemp || goto :error
+set tmpfile=%_rv%
+
+set cabalDir=%USERPROFILE%\.cabal
+set cabalConfig=%cabalDir%\config
+set defaultCabalDir=%APPDATA%\cabal
+
+:: replace roaming profile with ~/.cabal
+call :replaceStringInFile "%cabalConfig%" "%tmpfile%" "%defaultCabalDir%" "%cabalDir%" || goto :error
+:: now get rid of the horrific hardcoded 'c:\Program Files' line
+call :replaceStringInFile "%tmpfile%" "%cabalConfig%" "c:\Program Files\Haskell" "%haskellPath%" || goto :error
 
 :::::::::: End of script :::::::
 echo. Done.
@@ -98,6 +122,23 @@ set LocalVar2=...
     IF "%~1" NEQ "" SET %~1=%LocalVar1%
     IF "%~2" NEQ "" SET %~2=%LocalVar2%
 )
+GOTO:EOF
+
+:replaceStringInFile <inputfile> <outputfile> <oldstring> <newstring>
+:: surround inputfile, outputfile, oldstring, and newstring in double quotes!
+SETLOCAL
+::obliterate output file
+copy /y nul %2 >nul
+:: now iterate through line by line, constructing line=<string_replacement_var>
+:: and echoing it to target file
+for /f "tokens=1,* delims=]" %%A in ('"type %1|find /n /v """') do (
+    set "line=%%B"
+    if defined line (
+        call set "line=echo.%%line:%~3=%~4%%"
+        for /f "delims=" %%X in ('"echo."%%line%%""') do %%~X >>%2
+    ) ELSE echo.>>%2
+)
+ENDLOCAL
 GOTO:EOF
 
 :UnZipFile <ExtractTo> <newzipfile>
