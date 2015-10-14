@@ -3,10 +3,10 @@
 setlocal
 pushd .
 :: User modifiable ::::::::::::::
-set PYTHON_VERSION=2.7.6
+set PYTHON_VERSION=2.7.10
 set PYWIN32VERSION=219
-set md5sum_x64=b73f8753c76924bc7b75afaa6d304645
-set md5sum_x32=ac54e14f7ba180253b9bae6635d822ea
+set md5sum_x64=35f5c301beab341f6f6c9785939882ee
+set md5sum_x32=4ba2c79b103f6003bc4611c837a08208
 set md5sum_pywin32_x64=ff7e69429ef38c15088906314cb11f93
 set md5sum_pywin32_x32=f270e9f88155f649fc1a6c2f85aa128d
 :::::::::::::::::::::::::::::::::
