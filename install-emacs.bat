@@ -3,23 +3,28 @@
 setlocal
 pushd .
 :: User modifiable ::::::::::::::
-set emacsVersion=24.4
+set emacsVersion=24.5
 set zlibVersion=1.2.7-1
 set pngVersion=1.4.3-1
 ::set emacsMD5=06033dc7a9869dacb10299a8df99b9c2  ::for version 24.3
-set emacsMD5=39a74019f10739b7563af733cb379902
+::set emacsMD5=39a74019f10739b7563af733cb379902 ::for version 24.4
+set emacsMD5=b867f51ac412b848d3cb17fdc8896040
 set zlibMD5=f7cdd2d5a7b2645ac9bc8b981b596de5
 set pngMD5=44ee062641a204f65f0e96720fe57282
 :::::::::::::::::::::::::::::::::
 
-if %emacsVersion% geq 24.4 (
+if %emacsVersion% equ 24.5 (
+    set urlStub=i686-mingw32
+)
+if %emacsVersion% equ 24.4 (
     set urlStub=i686-pc-mingw32
-) else (
+)
+if %emacsVersion% leq 24.3 (
     set urlStub=i386
 )
 
 set packageName=emacs-%emacsVersion%
-set emacsUrl=http://mirrors.kernel.org/gnu/emacs/windows/emacs-%emacsVersion%-bin-%urlStub%.zip
+set emacsUrl=https://mirrors.kernel.org/gnu/emacs/windows/emacs-%emacsVersion%-bin-%urlStub%.zip
 set zlibUrl=http://win32builder.gnome.org/packages/3.6/zlib_%zlibVersion%_win32.zip
 set libpngUrl=http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/libpng_%pngVersion%_win32.zip
 

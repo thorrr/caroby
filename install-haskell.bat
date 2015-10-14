@@ -3,7 +3,7 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set haskellUrl=http://www.haskell.org/platform/download/2013.2.0.0/HaskellPlatform-2013.2.0.0-setup.exe
+set haskellUrl=https://www.haskell.org/platform/download/7.10.2/HaskellPlatform-7.10.2-x86_64-setup.exe
 set packageName=haskell
 :::::::::::::::::::::::::::::::::
 
@@ -16,7 +16,7 @@ cd "%DOWNLOAD_DIR%
 echo Downloading ^(may take a while^)
 call :download %haskellUrl% || goto :error
 set exeName=%_rv%
-call :verifyMD5Hash "%CD%\%exeName%" ffd0c700b869058929fa28de4fa0253f || goto :error
+call :verifyMD5Hash "%CD%\%exeName%" 7497c6e977879f0e145765a8afbc603a || goto :error
 popd
 
 ::unzipAndInstall
@@ -42,7 +42,43 @@ call :installPathRelative %packageName% || goto :error
 set haskellDir=%_rv%
 >"%initName%" echo @echo off
 >>"%initName%" echo.
->>"%initName%" echo set PATH=%%PATH%%;%haskellDir%\bin;%haskellDir%\lib;%haskellDir%\lib\extralibs\bin;%haskellDir%\mingw\bin;%haskellDir%\code;%haskellDir%\cabal\bin
+>>"%initName%" echo set PATH=%%PATH%%;%haskellDir%\bin;%haskellDir%\lib;%haskellDir%\lib\extralibs\bin;%haskellDir%\mingw\bin;%haskellDir%\code
+>>"%initName%" echo set CABAL_CONFIG=%%USERPROFILE%%\.cabal\config
+
+:: create a unix-like default cabal location ~/.cabal
+:: rather than the roaming profile location, %APPDATA%\cabal
+:createGoodCabalConfig
+:: source in the haskell path
+call "%initName%"
+:: initialize ghc's local package database
+ghc-pkg init "%GHC_PACKAGE_PATH%"
+:: then call cabal user-config diff to create the default file at ~/.cabal/config
+echo Setting up cabal
+cabal user-config diff || goto :error
+
+:: now do the substitutions
+call :installPath %packageName% || goto :error
+set haskellPath=%_rv%
+call :mktemp || goto :error
+set tmpfile=%_rv%
+call :mktemp || goto :error
+set tmpfile2=%_rv%
+call :mktemp || goto :error
+set tmpfile3=%_rv%
+
+set cabalDir=%USERPROFILE%\.cabal
+set cabalConfig=%cabalDir%\config
+set defaultCabalDir=%APPDATA%\cabal
+
+:: replace all remaining roaming profile paths with ~/.cabal
+call :replaceStringInFile "%cabalConfig%" "%tmpfile%" "%defaultCabalDir%" "%cabalDir%" || goto :error
+:: now fix install-dirs global
+call :replaceStringInFile "%tmpfile%" "%tmpfile2%" "-- prefix: c:\Program Files\Haskell" "   prefix: %haskellPath%" || goto :error
+:: "" "" install-dirs user
+call :replaceStringInFile "%tmpfile2%" "%tmpfile3%" "-- prefix: %cabalDir%" "   prefix: %cabalDir%" || goto :error
+:: add logs-dir
+call :replaceStringInFile "%tmpfile3%" "%cabalConfig%" "-- logs-dir: %cabalDir%" "logs-dir: %cabalDir%" || goto :error
+
 
 :::::::::: End of script :::::::
 echo. Done.
@@ -98,6 +134,23 @@ set LocalVar2=...
     IF "%~1" NEQ "" SET %~1=%LocalVar1%
     IF "%~2" NEQ "" SET %~2=%LocalVar2%
 )
+GOTO:EOF
+
+:replaceStringInFile <inputfile> <outputfile> <oldstring> <newstring>
+:: surround inputfile, outputfile, oldstring, and newstring in double quotes!
+SETLOCAL
+::obliterate output file
+copy /y nul %2 >nul
+:: now iterate through line by line, constructing line=<string_replacement_var>
+:: and echoing it to target file
+for /f "tokens=1,* delims=]" %%A in ('"type %1|find /n /v """') do (
+    set "line=%%B"
+    if defined line (
+        call set "line=echo.%%line:%~3=%~4%%"
+        for /f "delims=" %%X in ('"echo."%%line%%""') do %%~X >>%2
+    ) ELSE echo.>>%2
+)
+ENDLOCAL
 GOTO:EOF
 
 :UnZipFile <ExtractTo> <newzipfile>
