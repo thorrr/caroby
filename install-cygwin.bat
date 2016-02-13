@@ -95,6 +95,7 @@ cd /d %CAROBY_DIR%
 bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat bash --login -i -c 'cd ~/; exec /bin/bash'" /shortcut:bash
 popd
 
+:mkscripts
 :: build cygwin's init file
 call :initPath %packageName% || goto :error
 mkdir "%_rv%"
@@ -165,16 +166,11 @@ set updateShims=%cygbinpath%\update-shims.bat
 >>"%updateShims%" echo    copy "%%TMP%%\shim-with-convert-args.bat" "%cygdir%\shims\%%%%a.bat" ^>nul
 >>"%updateShims%" echo )
 
-:: call update-shims.bat once to set up our shims
-call "%cygbinpath%\update-shims.bat"
 
 :: create install-apt-cyg.sh and run it
 set iac=%cygbinpath%\install-apt-cyg.sh
 >"%iac%" echo #!/bin/bash
->>"%iac%" echo cd /tmp
->>"%iac%" echo rm -rf apt-cyg/
->>"%iac%" echo git clone https://github.com/rcmdnk/apt-cyg.git
->>"%iac%" echo cp apt-cyg/apt-cyg "$CYGBINPATH"
+>>"%iac%" echo wget https://raw.githubusercontent.com/svnpenn/sage/master/sage -O "$CYGBINPATH/apt-cyg"
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix $(/usr/bin/cygpath -u $cygbinpath/install-apt-cyg.sh)'
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c 'PATH=/usr/bin CYGBINPATH=$(/usr/bin/cygpath -u $cygbinpath) $(/usr/bin/cygpath -u $cygbinpath/install-apt-cyg.sh)'
 
@@ -193,6 +189,11 @@ set clip=%cygbinpath%\cygwin-list-installed-packages.bat
 >"%clip%" echo @echo off
 >>"%clip%" echo.
 >>"%clip%" echo bash -c "sed -e '1d' -e 's/ .*$//' -e 's/$/,^^/' /etc/setup/installed.db > installed-packages.txt"
+
+:endmkscripts
+
+:: call update-shims.bat once to set up our shims
+call "%cygbinpath%\update-shims.bat"
 
 :: make /etc/passwd and /etc/group work correctly
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/mkpasswd -l -p "$(/usr/bin/cygpath -H)" ^> /etc/passwd; /usr/bin/mkgroup -c ^> /etc/group'
