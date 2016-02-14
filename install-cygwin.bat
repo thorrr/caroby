@@ -171,13 +171,10 @@ set updateShims=%cygbinpath%\update-shims.bat
 >>"%updateShims%" echo    copy "%%TMP%%\shim-with-convert-args.bat" "%cygdir%\shims\%%%%a.bat" ^>nul
 >>"%updateShims%" echo )
 
-
-:: create install-apt-cyg.sh and run it
-set iac=%cygbinpath%\install-apt-cyg.sh
+:: create update-apt-cyg.sh
+set iac=%cygbinpath%\update-apt-cyg.sh
 >"%iac%" echo #!/bin/bash
 >>"%iac%" echo wget https://raw.githubusercontent.com/svnpenn/sage/master/sage -O "$CYGBINPATH/apt-cyg"
-"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix $(/usr/bin/cygpath -u $cygbinpath/install-apt-cyg.sh)'
-"%CYGWIN_INSTALL_DIR%\bin\bash" -c 'PATH=/usr/bin CYGBINPATH=$(/usr/bin/cygpath -u $cygbinpath) $(/usr/bin/cygpath -u $cygbinpath/install-apt-cyg.sh)'
 
 :: create install-fakecygpty and run it
 set ifcpty=%cygbinpath%\install-fakecygpty.sh
@@ -194,6 +191,14 @@ set clip=%cygbinpath%\cygwin-list-installed-packages.bat
 >"%clip%" echo @echo off
 >>"%clip%" echo.
 >>"%clip%" echo bash -c "sed -e '1d' -e 's/ .*$//' -e 's/$/,^^/' /etc/setup/installed.db > installed-packages.txt"
+
+:: download apt-cyg (from the sage repo)
+pushd .
+set APTCYGURL=https://raw.githubusercontent.com/svnpenn/sage/master/sage
+cd "%cygbinpath%"
+call :download %APTCYGURL% "%cygbinpath%\apt-cyg" || goto :error
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix apt-cyg'
+popd
 
 :endmkscripts
 
