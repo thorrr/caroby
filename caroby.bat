@@ -217,6 +217,12 @@ call :verifyMD5Hash "%CD%\curl.zip" ac7dc67ade0ffda67589cf082a2ed17d || goto :er
 call :UnzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
 
+:downloadRecycleDotVBS
+pushd .
+cd "%CAROBY_DIR%\bin\"
+call :download "https://raw.githubusercontent.com/npocmaka/batch.scripts/master/hybrids/jscript/deleteJS.bat" recycle.bat || goto :error
+
+
 :createCmdShortcut
 pushd .
 cd "%CAROBY_DIR%"
