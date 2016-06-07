@@ -3,8 +3,8 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set haskellUrl=https://www.haskell.org/platform/download/7.10.2/HaskellPlatform-7.10.2-x86_64-setup.exe
-set packageName=haskell
+set haskellUrl=https://downloads.haskell.org/~platform/8.0.1/HaskellPlatform-8.0.1-full-x86_64-setup.exe
+set packageName=haskell-8.0.1
 :::::::::::::::::::::::::::::::::
 
 call :carobyRegistry || goto :error
@@ -16,7 +16,7 @@ cd "%DOWNLOAD_DIR%
 echo Downloading ^(may take a while^)
 call :download %haskellUrl% || goto :error
 set exeName=%_rv%
-call :verifyMD5Hash "%CD%\%exeName%" 7497c6e977879f0e145765a8afbc603a || goto :error
+call :verifyMD5Hash "%CD%\%exeName%" a688dfe6f0a3a419bd5dec372fe7900f || goto :error
 popd
 
 ::unzipAndInstall
@@ -25,12 +25,16 @@ call :mktemp /D
 set tmpDir=%_rv%
 cd "%tmpDir%"
 copy "%DOWNLOAD_DIR%\%exeName%" . >nul
-echo Extracting Haskell archive.
+echo Extracting Haskell archive ^(may take a while^)
 7z x -y "%exeName%" >nul || goto :error
-echo done.
-echo Copying Haskell archive.
+7z x -y temp\GHC-setup.exe >nul || goto :error
+7z x -y temp\Extralibs-setup.exe >nul || goto :error
+del /f /q temp\GHC-setup.exe || goto :error
+del /f /q temp\Extralibs-setup.exe || goto :error
+
 call :installPath %packageName%
-xcopy /s/e "%tmpDir%" "%_rv%\" >nul
+cd ..
+move "%tmpDir%" "%_rv%"
 echo done.
 popd
 
@@ -51,7 +55,7 @@ set haskellDir=%_rv%
 :: source in the haskell path
 call "%initName%"
 :: initialize ghc's local package database
-ghc-pkg init "%GHC_PACKAGE_PATH%"
+ghc-pkg init "%GHC_PACKAGE_PATH%" || goto :error
 :: then call cabal user-config diff to create the default file at ~/.cabal/config
 echo Setting up cabal
 cabal user-config diff || goto :error
