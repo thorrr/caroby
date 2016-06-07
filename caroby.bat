@@ -221,7 +221,11 @@ popd
 pushd .
 cd "%CAROBY_DIR%\bin\"
 call :download "https://raw.githubusercontent.com/npocmaka/batch.scripts/master/hybrids/jscript/deleteJS.bat" recycle.bat || goto :error
-
+:: also create bash-friendly wrapper called 'recycle'
+set _f="%CAROBY_DIR%\bin\recycle"
+>%_f%  echo #!/bin/sh
+>>%_f% echo recycle.bat $^(cygpath -a -m $1^)
+popd
 
 :createCmdShortcut
 pushd .
