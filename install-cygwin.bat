@@ -180,8 +180,8 @@ set iac=%cygbinpath%\update-apt-cyg.sh
 set ifcpty=%cygbinpath%\install-fakecygpty.sh
 >"%ifcpty%" echo #!/bin/bash
 >>"%ifcpty%" echo cd /tmp
->>"%ifcpty%" echo wget https://github.com/Shougo/fakecygpty/raw/master/fakecygpty.c
->>"%ifcpty%" echo gcc -o fakecygpty.exe fakecygpty.c
+>>"%ifcpty%" echo wget https://raw.githubusercontent.com/d5884/fakecygpty/master/fakecygpty.c -O fakecygpty.c
+>>"%ifcpty%" echo gcc -D_GNU_SOURCE -o fakecygpty fakecygpty.c
 >>"%ifcpty%" echo cp fakecygpty.exe "$CYGBINPATH"
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix $(/usr/bin/cygpath -u $cygbinpath/install-fakecygpty.sh)'
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c 'PATH=/usr/bin CYGBINPATH=$(/usr/bin/cygpath -u $cygbinpath) $(/usr/bin/cygpath -u $cygbinpath/install-fakecygpty.sh)'
