@@ -1732,7 +1732,9 @@ pwgen,^
 pwget,^
 pylint,^
 python,^
+python-setuptools,^
 python3,^
+python3-setuptools,^
 qhull,^
 qrupdate,^
 qsf,^
