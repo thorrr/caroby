@@ -123,7 +123,7 @@ set cygdir=%_rv%
 >>"%fname%" echo :: reset HOME just in case
 >>"%fname%" echo set HOME=%%USERPROFILE%%
 >>"%fname%" echo :: make sure /home/USERNAME is mounted because ssh and other tools expect it.  any existing dir will be hidden
->>"%fname%" echo bash -c 'mount -f `cygpath -m "$HOME"` /home/`logname` ^^^&^^^& mount -m ^^^> /etc/fstab'
+>>"%fname%" echo bash -c 'mount -f `cygpath -m "$HOME"` /home/$USERNAME ^^^&^^^& mount -m ^^^> /etc/fstab'
 
 :: create the other cygwin bin path and put update-shims.bat into it
 set cygbinpath=%CYGWIN_INSTALL_DIR%\bin-extra
