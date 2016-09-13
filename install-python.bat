@@ -104,8 +104,8 @@ set pythonDir=%_rv%
 ::setupTools
 pushd .
 cd "%DOWNLOAD_DIR%
-call :download https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py || goto :error
-call :verifyMD5Hash "%CD%\ez_setup.py" d843f5d9670cbd55f5187a199b43d2f8 || goto :error
+call :download https://bootstrap.pypa.io/ez_setup.py || goto :error
+call :verifyMD5Hash "%CD%\ez_setup.py" 81d5d742da0c7413f7c3a9229582d6dd || goto :error
 "%installDir%\python.exe" ez_setup.py
 "%installDir%\Scripts\easy_install.exe" pip
 "%installDir%\Scripts\easy_install.exe" virtualenv
