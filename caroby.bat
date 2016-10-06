@@ -45,8 +45,10 @@ if [%1]==[] goto argEndLoop
       shift
       goto argContinue
   )
-  ::unamed argument
-  set CAROBY_DIR=%USERPROFILE%\%~1
+  ::unamed argument - extract absolute path from command line argument which can be absolute or relative
+  pushd %~1
+  set CAROBY_DIR=%CD%
+  popd
 :argContinue
 shift
 goto argLoop
