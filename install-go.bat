@@ -4,7 +4,7 @@ setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
 set packageName=go1.6
-set goUrl=https://storage.googleapis.com/golang/go1.6.windows-amd64.msi
+set goUrl=https://storage.googleapis.com/golang/%packageName%.windows-amd64.msi
 :::::::::::::::::::::::::::::::::
 
 call :carobyRegistry || goto :error
