@@ -123,7 +123,7 @@ set cygdir=%_rv%
 >>"%fname%" echo :: reset HOME just in case
 >>"%fname%" echo set HOME=%%USERPROFILE%%
 >>"%fname%" echo :: make sure /home/USERNAME is mounted because ssh and other tools expect it.  any existing dir will be hidden
->>"%fname%" echo bash -c 'mount -f `cygpath -m "$HOME"` /home/`logname` ^^^&^^^& mount -m ^^^> /etc/fstab'
+>>"%fname%" echo bash -c 'mount -f `cygpath -m "$HOME"` /home/$USERNAME ^^^&^^^& mount -m ^^^> /etc/fstab'
 
 :: create the other cygwin bin path and put update-shims.bat into it
 set cygbinpath=%CYGWIN_INSTALL_DIR%\bin-extra
@@ -174,14 +174,14 @@ set updateShims=%cygbinpath%\update-shims.bat
 :: create update-apt-cyg.sh
 set iac=%cygbinpath%\update-apt-cyg.sh
 >"%iac%" echo #!/bin/bash
->>"%iac%" echo wget https://raw.githubusercontent.com/svnpenn/sage/master/sage -O "$CYGBINPATH/apt-cyg"
+>>"%iac%" echo wget https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg -O "$CYGBINPATH/apt-cyg"
 
 :: create install-fakecygpty and run it
 set ifcpty=%cygbinpath%\install-fakecygpty.sh
 >"%ifcpty%" echo #!/bin/bash
 >>"%ifcpty%" echo cd /tmp
->>"%ifcpty%" echo wget https://github.com/Shougo/fakecygpty/raw/master/fakecygpty.c
->>"%ifcpty%" echo gcc -o fakecygpty.exe fakecygpty.c
+>>"%ifcpty%" echo wget https://raw.githubusercontent.com/d5884/fakecygpty/master/fakecygpty.c -O fakecygpty.c
+>>"%ifcpty%" echo gcc -D_GNU_SOURCE -o fakecygpty fakecygpty.c
 >>"%ifcpty%" echo cp fakecygpty.exe "$CYGBINPATH"
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix $(/usr/bin/cygpath -u $cygbinpath/install-fakecygpty.sh)'
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c 'PATH=/usr/bin CYGBINPATH=$(/usr/bin/cygpath -u $cygbinpath) $(/usr/bin/cygpath -u $cygbinpath/install-fakecygpty.sh)'
@@ -192,9 +192,9 @@ set clip=%cygbinpath%\cygwin-list-installed-packages.bat
 >>"%clip%" echo.
 >>"%clip%" echo bash -c "sed -e '1d' -e 's/ .*$//' -e 's/$/,^^/' /etc/setup/installed.db > installed-packages.txt"
 
-:: download apt-cyg (from the sage repo)
+:: download apt-cyg
 pushd .
-set APTCYGURL=https://raw.githubusercontent.com/svnpenn/sage/master/sage
+set APTCYGURL=https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg
 cd "%cygbinpath%"
 call :download %APTCYGURL% "%cygbinpath%\apt-cyg" || goto :error
 "%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/dos2unix apt-cyg'

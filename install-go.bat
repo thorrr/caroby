@@ -3,8 +3,8 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=go1.4.2
-set goUrl=https://storage.googleapis.com/golang/%packageName%.windows-amd64.msi
+set packageName=go1.6
+set goUrl=https://storage.googleapis.com/golang/go1.6.windows-amd64.msi
 :::::::::::::::::::::::::::::::::
 
 call :carobyRegistry || goto :error
@@ -15,7 +15,7 @@ pushd .
 cd "%DOWNLOAD_DIR%
 call :download %goUrl% || goto :error
 set msiFile=%_rv%
-call :verifyMD5Hash "%CD%\%msiFile%" 020502bc282115a2290aac77b2079530 || goto :error
+call :verifyMD5Hash "%CD%\%msiFile%" f28ee97c688527a8e6e54314e1bc208f || goto :error
 
 echo Installing...
 call :installPath %packageName%

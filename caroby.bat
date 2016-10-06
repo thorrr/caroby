@@ -45,7 +45,6 @@ if [%1]==[] goto argEndLoop
       shift
       goto argContinue
   )
-  ::unamed argument - extract absolute path from command line argument which can be absolute or relative
   pushd %~1
   set CAROBY_DIR=%CD%
   popd
@@ -217,6 +216,16 @@ set curlURL=http://www.paehl.com/open_source/?download=curl_741_0_rtmp_ssh2_ssl_
 call :download "%curlURL%" curl.zip || goto :error
 call :verifyMD5Hash "%CD%\curl.zip" ac7dc67ade0ffda67589cf082a2ed17d || goto :error
 call :UnzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
+popd
+
+:downloadRecycleDotVBS
+pushd .
+cd "%CAROBY_DIR%\bin\"
+call :download "https://raw.githubusercontent.com/npocmaka/batch.scripts/master/hybrids/jscript/deleteJS.bat" recycle.bat || goto :error
+:: also create bash-friendly wrapper called 'recycle'
+set _f="%CAROBY_DIR%\bin\recycle"
+>%_f%  echo #!/bin/sh
+>>%_f% echo recycle.bat $^(cygpath -a -m $1^)
 popd
 
 :createCmdShortcut
