@@ -3,9 +3,9 @@
 setlocal
 pushd .
 :: User modifiable ::::::::::::::
-set PYTHON_VERSION=2.7.10
+set PYTHON_VERSION=2.7.12
 set PYWIN32VERSION=219
-set md5sum_x64=35f5c301beab341f6f6c9785939882ee
+set md5sum_x64=8fa13925db87638aa472a3e794ca4ee3
 set md5sum_x32=4ba2c79b103f6003bc4611c837a08208
 set md5sum_pywin32_x64=ff7e69429ef38c15088906314cb11f93
 set md5sum_pywin32_x32=f270e9f88155f649fc1a6c2f85aa128d
@@ -104,8 +104,8 @@ set pythonDir=%_rv%
 ::setupTools
 pushd .
 cd "%DOWNLOAD_DIR%
-call :download https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py || goto :error
-call :verifyMD5Hash "%CD%\ez_setup.py" d843f5d9670cbd55f5187a199b43d2f8 || goto :error
+call :download https://bootstrap.pypa.io/ez_setup.py || goto :error
+call :verifyMD5Hash "%CD%\ez_setup.py" 81d5d742da0c7413f7c3a9229582d6dd || goto :error
 "%installDir%\python.exe" ez_setup.py
 "%installDir%\Scripts\easy_install.exe" pip
 "%installDir%\Scripts\easy_install.exe" virtualenv
