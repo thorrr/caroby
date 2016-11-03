@@ -210,9 +210,9 @@ call :UnzipFile "%_rv%" "%CD%\%opensslZip%" || goto :error
 copy "%_rv%\libeay32.dll" "%CAROBY_DIR%\bin\" > nul
 copy "%_rv%\ssleay32.dll" "%CAROBY_DIR%\bin\" > nul
 
-set curlURL=https://dl.uxnr.de/build/curl/curl_winssl_cross_x64/curl-7.51.0/curl-7.51.0.zip
+set curlURL=http://www.paehl.com/open_source/?download=curl_750_3_rtmp_ssh2_ssl_sspi.zip
 call :download "%curlURL%" curl.zip || goto :error
-call :verifyMD5Hash "%CD%\curl.zip" ba7aa075b988ab566889af8ac8785d7e  || goto :error
+call :verifyMD5Hash "%CD%\curl.zip" c808ffa1e56f24f1208eae99d920d0b1  || goto :error
 call :UnzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
 
