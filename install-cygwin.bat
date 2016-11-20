@@ -4,6 +4,7 @@ setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
 set packageName=cygwin
+set downloadMirror=http://www.gtlib.gatech.edu/pub/cygwin/
 :::::::::::::::::::::::::::::::::
 
 set SETUPEXE=setup-x86_64.exe
@@ -69,7 +70,7 @@ set instFile=%_rv%.bat
 >>"%instFile%" echo --quiet-mode ^^
 >>"%instFile%" echo --root "%CYGWIN_INSTALL_DIR%" ^^
 >>"%instFile%" echo --local-package-dir "%DOWNLOAD_DIR%\cygwin-packages" ^^
->>"%instFile%" echo --site http://www.gtlib.gatech.edu/pub/cygwin/ ^^
+>>"%instFile%" echo --site %downloadMirror% ^^
 >>"%instFile%" echo --packages ^^
 
 :: how to generate an installed package list from an existing installation
