@@ -86,9 +86,6 @@ set _err2=notepad "%CYGWIN_INSTALL_DIR%\var\log\setup.log.full"
 goto :error
 :aftercyginstall
  
-:: copy setup.exe so we can update cygwin inside the caroby environment
-copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%CYGWIN_INSTALL_DIR%\"
-
 :mkshortcuts
 pushd .
 cd /d %CAROBY_DIR%
@@ -129,8 +126,21 @@ set cygdir=%_rv%
 :: create the other cygwin bin path and put update-shims.bat into it
 set cygbinpath=%CYGWIN_INSTALL_DIR%\bin-extra
 mkdir "%cygbinpath%" 2>nul
-set updateShims=%cygbinpath%\update-shims.bat
 
+:: copy setup.exe so we can update cygwin inside the caroby environment
+copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%cygbinpath%\"
+
+:: create setup-x86_64.bat for clean updates
+set setupbat=%CYGWIN_INSTALL_DIR%\%SETUPEXE:~0,-4%.bat
+echo setupbat is %setupbat%
+>"%setupbat%" echo @echo off
+>>"%setupbat%" echo.
+>>"%setupbat%" echo set thisDir=%%~dp0
+>>"%setupbat%" echo.
+>>"%setupbat%" echo "%%thisDir%%\bin-extra\%SETUPEXE%" --no-admin --no-shortcuts --no-startmenu --no-desktop -l "%DOWNLOAD_DIR%\cygwin-packages" -s %downloadMirror% --root %%thisDir%%
+
+:: create updateShims
+set updateShims=%cygbinpath%\update-shims.bat
 >"%updateShims%" echo @echo off
 >>"%updateShims%" echo ^>"%%TMP%%\shim-with-convert-args.bat" echo @echo off
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo setlocal
