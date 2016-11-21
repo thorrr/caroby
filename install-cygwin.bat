@@ -3,8 +3,8 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=cygwin
-set downloadMirror=http://www.gtlib.gatech.edu/pub/cygwin/
+set packageName=cygwinNew2
+set downloadMirror=http://cygwin.mirror.constant.com/
 :::::::::::::::::::::::::::::::::
 
 set SETUPEXE=setup-x86_64.exe
@@ -61,6 +61,7 @@ popd
 :: generate install script
 call :mktemp || goto :error
 set instFile=%_rv%.bat
+echo instFile is %instFile%
 >"%instFile%"  echo ::
 >>"%instFile%" echo "%DOWNLOAD_DIR%\%SETUPEXE%" ^^
 >>"%instFile%" echo --no-admin ^^
@@ -71,12 +72,17 @@ set instFile=%_rv%.bat
 >>"%instFile%" echo --root "%CYGWIN_INSTALL_DIR%" ^^
 >>"%instFile%" echo --local-package-dir "%DOWNLOAD_DIR%\cygwin-packages" ^^
 >>"%instFile%" echo --site %downloadMirror% ^^
->>"%instFile%" echo --packages ^^
+>>"%instFile%" echo -C Admin -C Archive -C Audio -C Base -C Database -C Devel -C Editors ^^
+>>"%instFile%" echo -C Graphics -C Interpreters -C Libs -C Lua -C Mail -C Math -C Misc -C Net -C OCaml ^^
+>>"%instFile%" echo -C Office -C Perl -C PHP -C Publishing -C Python -C Ruby -C Science -C Security ^^
+>>"%instFile%" echo -C Shells -C Sugar -C System -C Tcl -C Text -C Utils -C Video -C Web ^^
+>>"%instFile%" echo -P dos2unix -P wget -P gcc-g++ ^^
+>>"%instFile%" echo.
 
 :: how to generate an installed package list from an existing installation
 :: sed -e '1d' -e 's/ .*$//' -e 's/$/,^/' /etc/setup/installed.db > installed-packages.txt
->>"%instFile%" type installed-packages.txt
->>"%instFile%" echo IF %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
+@rem >>"%instFile%" type installed-packages.txt
+>>"%instFile%" echo IF %%ERRORLEVEL%% NEQ 0 exit /b %%ERRORLEVEL%%
 
 call "%instFile%" >nul || goto :cyginstallerror
 goto :aftercyginstall
@@ -132,6 +138,7 @@ copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%cygbinpath%\"
 
 :: create setup-x86_64.bat for clean updates
 set setupbat=%CYGWIN_INSTALL_DIR%\%SETUPEXE:~0,-4%.bat
+:: TODO - delete this
 echo setupbat is %setupbat%
 >"%setupbat%" echo @echo off
 >>"%setupbat%" echo.
