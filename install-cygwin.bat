@@ -3,8 +3,8 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=cygwinNew2
-set downloadMirror=http://cygwin.mirror.constant.com/
+set packageName=cygwin
+set downloadMirror=http://www.gtlib.gatech.edu/pub/cygwin/
 :::::::::::::::::::::::::::::::::
 
 set SETUPEXE=setup-x86_64.exe
