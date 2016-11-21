@@ -78,10 +78,6 @@ echo instFile is %instFile%
 >>"%instFile%" echo -C Shells -C Sugar -C System -C Tcl -C Text -C Utils -C Video -C Web ^^
 >>"%instFile%" echo -P dos2unix -P wget -P gcc-g++ ^^
 >>"%instFile%" echo.
-
-:: how to generate an installed package list from an existing installation
-:: sed -e '1d' -e 's/ .*$//' -e 's/$/,^/' /etc/setup/installed.db > installed-packages.txt
-@rem >>"%instFile%" type installed-packages.txt
 >>"%instFile%" echo IF %%ERRORLEVEL%% NEQ 0 exit /b %%ERRORLEVEL%%
 
 call "%instFile%" >nul || goto :cyginstallerror
