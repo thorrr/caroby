@@ -57,30 +57,24 @@ cd "%DOWNLOAD_DIR%
 call :download %SETUPURL% || goto :error
 popd
 
-:postSetup
-:: generate install script
-call :mktemp || goto :error
-set instFile=%_rv%.bat
-echo instFile is %instFile%
->"%instFile%"  echo ::
->>"%instFile%" echo "%DOWNLOAD_DIR%\%SETUPEXE%" ^^
->>"%instFile%" echo --no-admin ^^
->>"%instFile%" echo --no-shortcuts ^^
->>"%instFile%" echo --no-startmenu ^^
->>"%instFile%" echo --no-desktop ^^
->>"%instFile%" echo --quiet-mode ^^
->>"%instFile%" echo --root "%CYGWIN_INSTALL_DIR%" ^^
->>"%instFile%" echo --local-package-dir "%DOWNLOAD_DIR%\cygwin-packages" ^^
->>"%instFile%" echo --site %downloadMirror% ^^
->>"%instFile%" echo -C Admin -C Archive -C Audio -C Base -C Database -C Devel -C Editors ^^
->>"%instFile%" echo -C Graphics -C Interpreters -C Libs -C Lua -C Mail -C Math -C Misc -C Net -C OCaml ^^
->>"%instFile%" echo -C Office -C Perl -C PHP -C Publishing -C Python -C Ruby -C Science -C Security ^^
->>"%instFile%" echo -C Shells -C Sugar -C System -C Tcl -C Text -C Utils -C Video -C Web ^^
->>"%instFile%" echo -P dos2unix -P wget -P gcc-g++ ^^
->>"%instFile%" echo.
->>"%instFile%" echo IF %%ERRORLEVEL%% NEQ 0 exit /b %%ERRORLEVEL%%
+:installCommand
+:: build the install command then run it
+set installCommand="%DOWNLOAD_DIR%\%SETUPEXE%" --no-admin --no-shortcuts --no-startmenu --no-desktop --quiet-mode 
+set installCommand=%installCommand% --root "%CYGWIN_INSTALL_DIR%"
+set installCommand=%installCommand% --local-package-dir "%DOWNLOAD_DIR%\cygwin-packages"
+set installCommand=%installCommand% --site %downloadMirror%
+:: individual packages necessary for rest of script
+set installCommand=%installCommand% -P dos2unix -P wget -P gcc-g++
+:: categories
+set installCommand=%installCommand% -C Admin -C Archive -C Base -C Database -C Editors
+set installCommand=%installCommand% -C Interpreters -C Lua -C Math -C Misc -C Net -C OCaml
+set installCommand=%installCommand% -C Perl -C PHP -C Python -C Ruby -C Science -C Security
+set installCommand=%installCommand% -C Shells -C System -C Tcl -C Text -C Utils -C Web
+@rem set installCommand=%installCommand% -C Audio -C Devel -C Libs -C Graphics -C Office -C Video -C Mail -C Publishing
+:: other individual packages
+set installCommand=%installCommand% -P texlive
 
-call "%instFile%" >nul || goto :cyginstallerror
+call %installCommand% >nul || goto :cyginstallerror
 goto :aftercyginstall
 :cyginstallerror
 set _err=Error installing cygwin.  To see log do
