@@ -122,7 +122,8 @@ set _f="%CAROBY_DIR%\make-shortcut.bat"
 >>%_f% echo ::strip out the current directory name from the argument, which is a full path
 >>%_f% echo setlocal enabledelayedexpansion
 >>%_f% echo set RELARG=!ARG:%%_DIR%%=!
->>%_f% echo %%_DIR%%\bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat ^'%%RELARG%%^' " /shortcut:"%%SHORTCUT_NAME%%"
+>>%_f% echo set RELARG=%%RELARG:"=%%
+>>%_f% echo %%_DIR%%\bin\mkshortcut.vbs /target:cmd /args:"/c bin\caroby-init.bat ^^^'%%RELARG%%^^^' " /shortcut:"%%SHORTCUT_NAME%%"
 >>%_f% echo endlocal
 >>%_f% echo popd
 
