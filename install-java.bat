@@ -64,10 +64,16 @@ pushd .
 call :mktemp /D
 cd "%_rv%"
 7z x "%DOWNLOAD_DIR%\%SETUPEXE%"
+if exist .rsrc (
+    cd .rsrc\1033\JAVA_CAB10
+    7z x 111
+)
+
 call :UnZipFile "%installDir%" "%CD%\tools.zip" || goto :error
 ::'rx' makes the folder undeleteable??
 @rem icacls "%installDir%" /q /t /grant Everyone:rx  
 icacls "%installDir%" /q /t /grant Everyone:f
+
 
 ::recursively extract all .pack files
 cd "%installDir%"
