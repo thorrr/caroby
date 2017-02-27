@@ -3,10 +3,10 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=java-1.7
+set packageName=java-1.8
 :::::::::::::::::::::::::::::::::
 
-set SETUPEXE=jdk-7u72-windows-x64.exe
+set SETUPEXE=jdk-8u121-windows-x64.exe
 
 :argLoop
 if [%1]==[] goto argEndLoop
@@ -25,7 +25,7 @@ if [%1]==[] goto argEndLoop
       echo.
       echo 32bit installation selected
       echo.
-      set SETUPEXE=jdk-7u72-windows-i586.exe
+      set SETUPEXE=jdk-8u121-windows-i586.exe
       goto argContinue
   )
 :argContinue
@@ -33,7 +33,7 @@ shift
 goto argLoop
 :argEndLoop
 
-set JAVA_URL=http://download.oracle.com/otn-pub/java/jdk/7u72-b14/%SETUPEXE%
+set JAVA_URL=http://download.oracle.com/otn-pub/java/jdk/8u121-b13/%SETUPEXE%
 
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
@@ -52,7 +52,7 @@ if exist %SETUPEXE% (
 ) else (
     curl.exe -L -O -H "Cookie: oraclelicense=accept-securebackup-cookie" -k "%JAVA_URL%" || goto :error
 )
-call :verifyMD5Hash "%CD%\%SETUPEXE%" e012a5114e5df1186fec6e23b5297787 || goto :error
+call :verifyMD5Hash "%CD%\%SETUPEXE%" 63dafed9eb86fd7be52bc3fc09f5a571 || goto :error
 popd
 
 ::install
