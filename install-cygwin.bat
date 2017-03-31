@@ -128,8 +128,6 @@ copy "%DOWNLOAD_DIR%\%SETUPEXE%" "%cygbinpath%\"
 
 :: create setup-x86_64.bat for clean updates
 set setupbat=%CYGWIN_INSTALL_DIR%\%SETUPEXE:~0,-4%.bat
-:: TODO - delete this
-echo setupbat is %setupbat%
 >"%setupbat%" echo @echo off
 >>"%setupbat%" echo.
 >>"%setupbat%" echo set thisDir=%%~dp0
