@@ -228,6 +228,10 @@ if [%_DO_SHORTCUT_CLEANUP_X%] == [true] (
     )
 )
 
+:: rename "undeletable" file
+if exist "%CYGWIN_INSTALL_DIR%\usr\share\avogadro\crystals\zeolites" (
+    ren "\\.\%CYGWIN_INSTALL_DIR%\usr\share\avogadro\crystals\zeolites\CON.cif" CON-1.cif
+)
 :::::::::: End of script :::::::
 echo. Done.
 goto :end
