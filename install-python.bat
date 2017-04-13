@@ -104,11 +104,10 @@ set pythonDir=%_rv%
 ::setupTools
 pushd .
 cd "%DOWNLOAD_DIR%
-call :download https://bootstrap.pypa.io/ez_setup.py || goto :error
-call :verifyMD5Hash "%CD%\ez_setup.py" 81d5d742da0c7413f7c3a9229582d6dd || goto :error
-"%installDir%\python.exe" ez_setup.py
-"%installDir%\Scripts\easy_install.exe" pip
-"%installDir%\Scripts\easy_install.exe" virtualenv
+call :download https://bootstrap.pypa.io/get-pip.py || goto :error
+call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :error
+"%installDir%\python.exe" get-pip.py
+"%installDir%\Scripts\pip.exe" virtualenv
 ::finally, install pywin32
 "%installDir%\Scripts\easy_install.exe" "%pywin32File%
 popd.
