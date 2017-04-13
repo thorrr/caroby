@@ -4,11 +4,8 @@ setlocal
 pushd .
 :: User modifiable ::::::::::::::
 set PYTHON_VERSION=2.7.12
-set PYWIN32VERSION=219
 set md5sum_x64=8fa13925db87638aa472a3e794ca4ee3
 set md5sum_x32=4ba2c79b103f6003bc4611c837a08208
-set md5sum_pywin32_x64=ff7e69429ef38c15088906314cb11f93
-set md5sum_pywin32_x32=f270e9f88155f649fc1a6c2f85aa128d
 :::::::::::::::::::::::::::::::::
 
 :checkForCleanup
@@ -17,10 +14,8 @@ if not exist "%PYTHON_START_MENU_LOCATION%" (
 )
 
 set bits=.amd64
-set pywin32bits=-amd64
 set arch=_x64
 set md5sum=%md5sum_x64%
-set pywin32_md5sum=%md5sum_pywin32_x64%
 :argLoop
 if [%1]==[] goto argEndLoop
   if [%1]==[/?] (
@@ -39,10 +34,8 @@ if [%1]==[] goto argEndLoop
       echo 32bit installation selected
       echo.
       set bits=
-      set pywin32bits=32
       set arch=_x86
       set md5sum=%md5sum_x32%
-      set pywin32_md5sum=%md5sum_pywin32_x32%
       goto argContinue
   )
 :argContinue
@@ -55,8 +48,6 @@ set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\P
 set packageName=python-%PYTHON_VERSION%%arch%
 
 set URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%%bits%.msi
-::http://hivelocity.dl.sourceforge.net/project/pywin32/pywin32/Build%20219/pywin32-219.win-amd64-py2.7.exe
-set PYWIN32URL=http://hivelocity.dl.sourceforge.net/project/pywin32/pywin32/Build^^^^^^^^^^^^^^%%%%%%%%%%%%%%%%20%PYWIN32VERSION%/pywin32-%PYWIN32VERSION%.win%pywin32bits%-py2.7.exe
 
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
@@ -67,10 +58,6 @@ cd "%DOWNLOAD_DIR%
 call :download %URL% || goto :error
 set msiFile=%_rv%
 call :verifyMD5Hash "%CD%\%msiFile%" %md5sum% || goto :error
-
-call :download %PYWIN32URL% || goto :error
-set pywin32File=%_rv%
-call :verifyMD5Hash "%CD%\%pywin32File%" %pywin32_md5sum% || goto :error
 
 call :installPath %packageName%
 set installDir=%_rv%
@@ -107,9 +94,9 @@ cd "%DOWNLOAD_DIR%
 call :download https://bootstrap.pypa.io/get-pip.py || goto :error
 call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :error
 "%installDir%\python.exe" get-pip.py
-"%installDir%\Scripts\pip.exe" virtualenv
+"%installDir%\Scripts\pip.exe" install virtualenv
 ::finally, install pywin32
-"%installDir%\Scripts\easy_install.exe" "%pywin32File%
+"%installDir%\Scripts\pip.exe" install pypiwin32
 popd.
 
 ::create relocate-python.bat
