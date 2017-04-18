@@ -72,7 +72,7 @@ set installCommand=%installCommand% -C Perl -C PHP -C Python -C Ruby -C Science 
 set installCommand=%installCommand% -C Shells -C System -C Tcl -C Text -C Utils -C Web
 @rem set installCommand=%installCommand% -C Audio -C Devel -C Libs -C Graphics -C Office -C Video -C Mail -C Publishing
 :: other individual packages
-set installCommand=%installCommand% -P texlive
+set installCommand=%installCommand% -P texlive texlive-collection-xetex texlive-collection-luatex
 
 call %installCommand% >nul || goto :cyginstallerror
 goto :aftercyginstall
