@@ -90,7 +90,7 @@ set pythonDir=%_rv%
 
 ::setupTools
 pushd .
-cd "%DOWNLOAD_DIR%
+cd "%installDir%\Scripts"
 call :download https://bootstrap.pypa.io/get-pip.py || goto :error
 call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :error
 "%installDir%\python.exe" get-pip.py
