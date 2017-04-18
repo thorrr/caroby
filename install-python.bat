@@ -127,7 +127,7 @@ set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >>"%rpbat%" echo     pip.exe install -U --force-reinstall setuptools ^>nul
 >>"%rpbat%" echo.
 >>"%rpbat%" echo     :: system .pyc all have hardcoded paths too
->>"%rpbat%" echo     del /S /Q *.pyc >nul
+>>"%rpbat%" echo     del /S /Q *.pyc ^>nul
 >>"%rpbat%" echo     :: force regeneration of os.pyc
 >>"%rpbat%" echo     python.exe -c "import os"
 >>"%rpbat%" echo )
