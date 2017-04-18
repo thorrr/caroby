@@ -132,7 +132,7 @@ set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >>"%rpbat%" echo )
 >>"%rpbat%" echo.
 >>"%rpbat%" echo popd
->>"%rpbat%" endlocal
+>>"%rpbat%" echo endlocal
 
 :: optional - disable pip outside of virtualenvs but give an escape hatch with "gpip"
 >>"%initName%" echo set PIP_REQUIRE_VIRTUALENV=true
