@@ -92,13 +92,14 @@ set pythonDir=%_rv%
 
 ::setupTools
 pushd .
-cd "%installDir%\Scripts"
+cd "%DOWNLOAD_DIR"
 call :download https://bootstrap.pypa.io/get-pip.py || goto :error
 call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :error
-"%installDir%\python.exe" get-pip.py
-"%installDir%\Scripts\pip.exe" install virtualenv
+"%installDir%\python.exe" get-pip.py || goto :error
+"%installDir%\Scripts\pip.exe" install virtualenv || goto :error
 ::finally, install pywin32
-"%installDir%\Scripts\pip.exe" install pypiwin32
+"%installDir%\Scripts\pip.exe" install pypiwin32 || goto :error
+copy get-pip.py "%installDir%\Scripts"
 popd.
 
 ::create relocate-python.bat
