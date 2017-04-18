@@ -103,26 +103,34 @@ popd.
 set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >"%rpbat%" echo @echo off
 >>"%rpbat%" echo.
+>>"%rpbat%" echo setlocal
+>>"%rpbat%" echo pushd .
 >>"%rpbat%" echo :: easy_install, virtualenv, and pip all have hardcoded paths when they're installed.
 >>"%rpbat%" echo :: If you relocate your devEnvironment you have to reinstall them.
->>"%rpbat%" echo @echo off
->>"%rpbat%" echo.
->>"%rpbat%" echo pushd .
->>"%rpbat%" echo cd %%PYTHON_DIR%%\Scripts
+>>"%rpbat%" echo cd "%%PYTHON_DIR%%"
 >>"%rpbat%" echo.
 >>"%rpbat%" echo set _VAR_SET=0
->>"%rpbat%" echo FOR /F "tokens=3" %%%%G IN ('%%WINDIR%%\System32\find.exe /C "#!%%PYTHON_DIR%%\python.exe" easy_install-script.py') do (
+>>"%rpbat%" echo FOR /F "tokens=3" %%%%G IN ('%%WINDIR%%\System32\find.exe /C "%%PYTHON_DIR%%" Lib\os.pyc') do (
 >>"%rpbat%" echo.
 >>"%rpbat%" echo     set _VAR_SET=%%%%G
 >>"%rpbat%" echo )
 >>"%rpbat%" echo.
->>"%rpbat%" echo if [%%_VAR_SET%%] neq [1] (
+>>"%rpbat%" echo if [%%_VAR_SET%%] == [0] (
+>>"%rpbat%" echo     :: didn't find a string with the python dir in our compiled .pyc file
 >>"%rpbat%" echo     echo Relocating python to %%PYTHON_DIR%%
->>"%rpbat%" echo     python.exe easy_install-script.py setuptools ^>nul
->>"%rpbat%" echo     easy_install pip
->>"%rpbat%" echo     easy_install virtualenv
+>>"%rpbat%" echo     set PIP_REQUIRE_VIRTUALENV=
+>>"%rpbat%" echo     python.exe Scripts\get-pip.py --force-reinstall ^>nul
+>>"%rpbat%" echo     pip.exe install -U --force-reinstall virtualenv ^>nul
+>>"%rpbat%" echo     pip.exe install -U --force-reinstall setuptools ^>nul
+>>"%rpbat%" echo.
+>>"%rpbat%" echo     :: system .pyc all have hardcoded paths too
+>>"%rpbat%" echo     del /S /Q *.pyc >nul
+>>"%rpbat%" echo     :: force regeneration of os.pyc
+>>"%rpbat%" echo     python.exe -c "import os"
 >>"%rpbat%" echo )
+>>"%rpbat%" echo.
 >>"%rpbat%" echo popd
+>>"%rpbat%" endlocal
 
 :: optional - disable pip outside of virtualenvs but give an escape hatch with "gpip"
 >>"%initName%" echo set PIP_REQUIRE_VIRTUALENV=true
