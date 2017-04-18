@@ -211,9 +211,9 @@ call :UnzipFile "%_rv%" "%CD%\%opensslZip%" || goto :error
 copy "%_rv%\libeay32.dll" "%CAROBY_DIR%\bin\" > nul
 copy "%_rv%\ssleay32.dll" "%CAROBY_DIR%\bin\" > nul
 
-set curlURL=http://www.paehl.com/open_source/?download=curl_750_3_rtmp_ssh2_ssl_sspi.zip
+set curlURL=http://www.paehl.com/open_source/?download=curl_752_1_rtmp_ssh2_ssl_sspi.zip
 call :download "%curlURL%" curl.zip || goto :error
-call :verifyMD5Hash "%CD%\curl.zip" c808ffa1e56f24f1208eae99d920d0b1  || goto :error
+call :verifyMD5Hash "%CD%\curl.zip" c66ea5075f67dc1d08b9e83ba27b970d  || goto :error
 call :UnzipFile "%CAROBY_DIR%\bin\" "%DOWNLOAD_DIR%\curl.zip" || goto :error
 popd
 
