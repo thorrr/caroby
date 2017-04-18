@@ -87,6 +87,8 @@ set pythonDir=%_rv%
 >>"%initName%" echo set PYTHON_DIR=%pythonDir%
 >>"%initName%" echo set TCL_LIBRARY=%pythonDir%\tcl\tcl8.5
 >>"%initName%" echo set TK_LIBRARY=%pythonDir%\tcl\tk8.5
+>>"%initName%" echo.
+>>"%initName%" %%CAROBY_DIR%%\bin\relocate-python.bat
 
 ::setupTools
 pushd .
