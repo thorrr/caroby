@@ -113,7 +113,7 @@ set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >>"%rpbat%" echo cd "%%PYTHON_DIR%%"
 >>"%rpbat%" echo.
 >>"%rpbat%" echo set _VAR_SET=0
->>"%rpbat%" echo FOR /F "tokens=3" %%%%G IN ('%%WINDIR%%\System32\find.exe /C "%%PYTHON_DIR%%" Lib\os.pyc') do (
+>>"%rpbat%" echo FOR /F "tokens=3" %%%%G IN ('%%WINDIR%%\System32\find.exe /C /I "%%PYTHON_DIR%%" Lib\os.pyc') do (
 >>"%rpbat%" echo.
 >>"%rpbat%" echo     set _VAR_SET=%%%%G
 >>"%rpbat%" echo )
