@@ -99,7 +99,7 @@ call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :
 "%installDir%\Scripts\pip.exe" install virtualenv || goto :error
 ::finally, install pywin32
 "%installDir%\Scripts\pip.exe" install pypiwin32 || goto :error
-copy get-pip.py "%installDir%\Scripts"
+copy get-pip.py "%installDir%\Scripts" >nul || goto :error^
 popd.
 
 ::create relocate-python.bat
