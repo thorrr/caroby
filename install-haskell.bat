@@ -3,10 +3,12 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set haskellUrl=https://downloads.haskell.org/~platform/8.0.1/HaskellPlatform-8.0.1-full-x86_64-setup.exe
-set packageName=haskell-8.0.1
+set version=8.0.1
 :::::::::::::::::::::::::::::::::
 
+set haskellUrl=https://downloads.haskell.org/~platform/%version%/HaskellPlatform-%version%-full-x86_64-setup.exe
+set packageName=haskell-%version%
+::::::::::::::::::::::::::::::::
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
 
