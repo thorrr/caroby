@@ -115,10 +115,11 @@ set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >>"%rpbat%" echo :: easy_install, virtualenv, and pip all have hardcoded paths when they're installed.
 >>"%rpbat%" echo :: If you relocate your devEnvironment you have to reinstall them.
 >>"%rpbat%" echo cd "%%PYTHON_DIR%%"
+>>"%rpbat%" echo set pycdir=Lib
+>>"%rpbat%" echo if exist Lib\__pycache__ set pycdir=Lib\__pycache__
 >>"%rpbat%" echo.
 >>"%rpbat%" echo set _VAR_SET=0
->>"%rpbat%" echo FOR /F "tokens=3" %%%%G IN ('%%WINDIR%%\System32\find.exe /C /I "%%PYTHON_DIR%%" Lib\os.pyc') do (
->>"%rpbat%" echo.
+>>"%rpbat%" echo FOR /F "tokens=3" %%%%G IN ('%%WINDIR%%\System32\find.exe /C /I "%%PYTHON_DIR%%" %%pycdir%%\os*.pyc') do (
 >>"%rpbat%" echo     set _VAR_SET=%%%%G
 >>"%rpbat%" echo )
 >>"%rpbat%" echo.
@@ -131,7 +132,7 @@ set rpbat=%CAROBY_DIR%\bin\relocate-python.bat
 >>"%rpbat%" echo     pip.exe install -U --force-reinstall setuptools ^>nul
 >>"%rpbat%" echo.
 >>"%rpbat%" echo     :: system .pyc all have hardcoded paths too
->>"%rpbat%" echo     del /S /Q *.pyc ^>nul
+>>"%rpbat%" echo     del /S /Q %%pycdir%%\*.pyc ^>nul
 >>"%rpbat%" echo     :: force regeneration of os.pyc
 >>"%rpbat%" echo     python.exe -c "import os"
 >>"%rpbat%" echo )
