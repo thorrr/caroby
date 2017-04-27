@@ -3,7 +3,8 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set version=8.0.1
+set version=8.0.2
+set md5hash=a2a9652228739e4e40bf5adc5875638f
 :::::::::::::::::::::::::::::::::
 
 set haskellUrl=https://downloads.haskell.org/~platform/%version%/HaskellPlatform-%version%-full-x86_64-setup.exe
@@ -18,7 +19,7 @@ cd "%DOWNLOAD_DIR%
 echo Downloading ^(may take a while^)
 call :download %haskellUrl% || goto :error
 set exeName=%_rv%
-call :verifyMD5Hash "%CD%\%exeName%" a688dfe6f0a3a419bd5dec372fe7900f || goto :error
+call :verifyMD5Hash "%CD%\%exeName%" %md5hash% || goto :error
 popd
 
 ::unzipAndInstall
