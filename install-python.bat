@@ -91,6 +91,8 @@ set pythonDir=%_rv%
 >>"%initName%" echo call %%CAROBY_DIR%%\bin\relocate-python.bat
 
 ::setupTools
+set oldPRV=%PIP_REQUIRE_VIRTUALENV%
+set PIP_REQUIRE_VIRTUALENV=
 pushd .
 cd "%DOWNLOAD_DIR%"
 call :download https://bootstrap.pypa.io/get-pip.py || goto :error
@@ -99,7 +101,9 @@ call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :
 "%installDir%\Scripts\pip.exe" install virtualenv || goto :error
 ::finally, install pywin32
 "%installDir%\Scripts\pip.exe" install pypiwin32 || goto :error
-copy get-pip.py "%installDir%\Scripts" >nul || goto :error^
+copy get-pip.py "%installDir%\Scripts" >nul || goto :error
+
+set PIP_REQUIRE_VIRTUALENV=%oldPRV%
 popd.
 
 ::create relocate-python.bat
