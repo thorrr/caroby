@@ -7,15 +7,23 @@ set PYTHON_VERSION=2.7.12
 set md5sum_x64=8fa13925db87638aa472a3e794ca4ee3
 set md5sum_x32=4ba2c79b103f6003bc4611c837a08208
 :::::::::::::::::::::::::::::::::
+set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
+:::::::::::::::::::::::::::::::::
 
 :checkForCleanup
 if not exist "%PYTHON_START_MENU_LOCATION%" (
     set _DO_SHORTCUT_CLEANUP=true
 )
-
-set bits=.amd64
+if %PYTHON_MAJOR_VERSION% GTR 2 (
+    set bits=-amd64-webinstall
+    set filetype=.exe
+) else (
+    set bits=.amd64
+    set filetype=.msi
+)
 set arch=_x64
 set md5sum=%md5sum_x64%
+
 :argLoop
 if [%1]==[] goto argEndLoop
   if [%1]==[/?] (
@@ -43,11 +51,10 @@ shift
 goto argLoop
 :argEndLoop
 
-set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
 set PYTHON_START_MENU_LOCATION=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Python %PYTHON_MAJOR_VERSION%
 set packageName=python-%PYTHON_VERSION%%arch%
 
-set URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%%bits%.msi
+set URL=https://www.python.org/ftp/python/%PYTHON_VERSION%/python-%PYTHON_VERSION%%bits%%filetype%
 
 call :carobyRegistry || goto :error
 call :verifyPackageNotInstalled %packageName% || goto :error
@@ -61,8 +68,20 @@ call :verifyMD5Hash "%CD%\%msiFile%" %md5sum% || goto :error
 
 call :installPath %packageName%
 set installDir=%_rv%
+call :mktemp /D
+set tmpdir=%_rv%
+
 echo Installing...
-msiexec /a "%msiFile%" TARGETDIR="%installDir%" /q
+if %PYTHON_MAJOR_VERSION% GTR 2 (
+    %msiFile% /layout "%tmpdir%" /q || goto :error
+    cd "%tmpdir%"
+    del *_d*
+    del *.exe
+    del *.msu
+    for /r %%x in (*.msi) do msiexec /a "%%x" TARGETDIR="%installDir%" /q
+) else (
+    msiexec /a "%msiFile%" TARGETDIR="%installDir%" /q
+)
 echo Done.
 popd
 
