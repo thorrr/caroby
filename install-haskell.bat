@@ -32,8 +32,15 @@ echo Extracting Haskell archive ^(may take a while^)
 7z x -y "%exeName%" >nul || goto :error
 7z x -y temp\GHC-setup.exe >nul || goto :error
 7z x -y temp\Extralibs-setup.exe >nul || goto :error
+7z x -y temp\MSys-setup.exe >nul || goto :error
+7z x -y temp\stack*.exe -obin >nul || goto :error
+
+del /f /q "%exeName%" || goto :error
 del /f /q temp\GHC-setup.exe || goto :error
 del /f /q temp\Extralibs-setup.exe || goto :error
+del /f /q temp\MSys-setup.exe || goto :error
+del /f /q temp\stack*.exe || goto :error
+rmdir temp || goto :error
 
 call :installPath %packageName%
 cd ..
