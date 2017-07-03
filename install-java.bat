@@ -50,7 +50,21 @@ if exist %SETUPEXE% (
     echo to refresh it.
     echo.
 ) else (
-    curl.exe -L -O -H "Cookie: oraclelicense=accept-securebackup-cookie" -k "%JAVA_URL%" || goto :error
+    if not exist %SETUPEXE% (
+        for %%X in (curl.exe) do (set CURL_IS_INSTALLED=%%~$PATH:X)
+        if defined CURL_IS_INSTALLED (
+            curl.exe -L -O -H "Cookie: oraclelicense=accept-securebackup-cookie" -k "%JAVA_URL%" || goto :error
+            @rem the following doesn't work, can't get cookies right
+            @rem call :download "%JAVA_URL%" || goto :error
+        ) else (
+            @rem no curl, force the user to manually download the exe from oracle's website
+            echo.
+            echo First, manually download %SETUPEXE%
+            echo from
+            echo http://www.oracle.com/technetwork/java/javase/downloads/java-archive-javase8-2177648.html
+            goto :error
+        )
+    )
 )
 call :verifyMD5Hash "%CD%\%SETUPEXE%" 63dafed9eb86fd7be52bc3fc09f5a571 || goto :error
 popd
