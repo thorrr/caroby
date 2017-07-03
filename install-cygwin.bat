@@ -228,6 +228,11 @@ if [%_DO_SHORTCUT_CLEANUP_X%] == [true] (
     )
 )
 
+:: setup python2 pip and virtualenv
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/easy_install-2.7 pip virtualenv' || goto :error
+:: now upgrade pip, setuptools, virtualenv in case easy_install had an old version
+"%CYGWIN_INSTALL_DIR%\bin\bash" -c '/usr/bin/pip install -U pip setuptools virtualenv' || goto :error
+
 :: rename "undeletable" file
 if exist "%CYGWIN_INSTALL_DIR%\usr\share\avogadro\crystals\zeolites" (
     ren "\\.\%CYGWIN_INSTALL_DIR%\usr\share\avogadro\crystals\zeolites\CON.cif" CON-1.cif
