@@ -136,6 +136,7 @@ set _f="%CAROBY_DIR%\bin\caroby-init.bat"
 >>%_f% echo popd
 >>%_f% echo.
 >>%_f% echo set PATH=%%CAROBY_DIR%%\bin;%%PATH%%
+>>%_f% echo set PATH=%%USERPROFILE%%\bin;%%PATH%%
 >>%_f% echo pushd .
 >>%_f% echo cd "%%CAROBY_DIR%%\init.d"
 >>%_f% echo :: first pick up global setup files
