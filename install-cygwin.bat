@@ -145,8 +145,9 @@ set updateShims=%cygbinpath%\update-shims.bat
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo.
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo :argLoop
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo if [%%%%1]==[] goto argEndLoop
->>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo set _arg=%%%%1
+>>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo.
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo set _argnoquotes=%%%%~1
+>>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo set _arg=%%%%_argnoquotes%%%%
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo.
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo if [%%%%_argnoquotes:~1,1%%%%] == [:] set _driveLetter=%%%%_argnoquotes:~0,1%%%%
 >>"%updateShims%" echo ^>^>"%%TMP%%\shim-with-convert-args.bat" echo if [%%%%_argnoquotes:~1,1%%%%] == [:] set _restofpath=%%%%_argnoquotes:~3%%%%
