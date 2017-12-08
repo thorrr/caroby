@@ -2,7 +2,6 @@
 setlocal
 pushd .
 
-set CAROBY_DIR=%USERPROFILE%\caroby
 set DOWNLOAD_DIR=%USERPROFILE%\Downloads
 
 :argLoop
@@ -18,7 +17,7 @@ if [%1]==[] goto argEndLoop
       echo     caroby /?
       echo.
       echo   Options:
-      echo     environment-path      parent directory of caroby environment [default:  %CAROBY_DIR%]
+      echo     environment-path      parent directory of caroby environment
       echo     /D                    override download directory for internet packages [default:  %DOWNLOAD_DIR%]
       echo     /F                    force overwrite of existing environment path
       echo.    /?                    this help screen
@@ -43,32 +42,47 @@ if [%1]==[] goto argEndLoop
       shift
       goto argContinue
   )
-  pushd %~1
-  set CAROBY_DIR=%CD%
-  popd
+  :: handle single argument here
+  set CAROBY_DIR_ARG=%~1
+
 :argContinue
 shift
 goto argLoop
 :argEndLoop
 
-set PATH=%CAROBY_DIR%\bin;%PATH%
+if "%CAROBY_DIR_ARG%" == "" (
+    echo caroby.bat /? for usage
+    exit /b 1
+)
 
 if not exist "%DOWNLOAD_DIR%" (
     echo ERROR:  download-dir %DOWNLOAD_DIR% doesn't exist.
     exit /b 1
 )
-if exist "%CAROBY_DIR%" (
-    if [%_FORCE%] == [true] (
-        echo %CAROBY_DIR% exists.  Doing force installation.
-    ) else (
-        echo %CAROBY_DIR% exists.  To force installation, use /F
-        exit /b 1
-    )
+
+mkdir "%CAROBY_DIR_ARG%" 2>nul
+set MKDIR_ERRORLEVEL=%ERRORLEVEL%
+
+:: cleverly deal with relative or absolute paths
+pushd "%CAROBY_DIR_ARG%"
+set CAROBY_DIR=%CD%
+popd
+
+if %MKDIR_ERRORLEVEL% neq 0 (
+  if [%_FORCE%] == [true] (
+      echo %CAROBY_DIR% exists.  Doing force installation.
+  ) else (
+      echo %CAROBY_DIR% exists.  To force installation, use /F
+      exit /b 1
+  )
 ) else (
     echo Creating new caroby installation in %CAROBY_DIR%
 )
+
 :endArgs
 
+:localState
+set PATH=%CAROBY_DIR%\bin;%PATH%
 :localState
 call :carobyRegistryFilename
 set CarobyRegistry="%_rv%"
