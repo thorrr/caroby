@@ -3,8 +3,8 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set version=8.0.2
-set md5hash=a2a9652228739e4e40bf5adc5875638f
+set version=8.2.1
+set md5hash=b94812c7fa88c784d82542ab1740021b
 :::::::::::::::::::::::::::::::::
 
 set haskellUrl=https://downloads.haskell.org/~platform/%version%/HaskellPlatform-%version%-full-x86_64-setup.exe

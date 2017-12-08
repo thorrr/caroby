@@ -4,9 +4,9 @@ setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
 set packageName=intellij
-set version=2016.3.5
+set version=2017.3
 set downloadUrl=https://download-cf.jetbrains.com/idea/ideaIC-%version%.exe
-set md5sum=d0bcc11a04310609cdc12d2de072c9d1
+set md5sum=fea81ac0922445e271fc9468f706d1d6
 :::::::::::::::::::::::::::::::::
 
 call :carobyRegistry || goto :error

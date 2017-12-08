@@ -3,7 +3,7 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=rust-1.0.0
+set packageName=rust-1.22.1
 set rustUrl=https://static.rust-lang.org/dist/%packageName%-x86_64-pc-windows-gnu.msi
 :::::::::::::::::::::::::::::::::
 
@@ -15,7 +15,7 @@ pushd .
 cd "%DOWNLOAD_DIR%
 call :download %rustUrl% || goto :error
 set msiFile=%_rv%
-call :verifyMD5Hash "%CD%\%msiFile%" 27802565a94ee63c035bb3680b7d3369 || goto :error
+call :verifyMD5Hash "%CD%\%msiFile%" be970d7690428724ea0a9ee7af974609|| goto :error
 
 echo Installing...
 call :installPath %packageName%

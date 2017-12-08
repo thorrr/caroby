@@ -3,10 +3,10 @@
 setlocal
 pushd .
 :: User modifiable ::::::::::::::
-set R_VERSION=3.0.3
-set r_md5=446db51e5c188ed2dccbd44dfa5f4aa9
-set RSTUDIO_VERSION=0.98.501
-set rstudio_md5=d24335184fc42909f1db4ab754f14e52
+set R_VERSION=3.4.3
+set r_md5=0ff087acbae677d7255af19b0a9df27f
+set RSTUDIO_VERSION=1.1.383
+set rstudio_md5=abfc9ac40cbc59fc141ede7ef33000be
 :::::::::::::::::::::::::::::::::
 set R_URL=http://cran.rstudio.com/bin/windows/base/old/%R_VERSION%/R-%R_VERSION%-win.exe
 set RSTUDIO_URL=http://download1.rstudio.org/RStudio-%RSTUDIO_VERSION%.zip

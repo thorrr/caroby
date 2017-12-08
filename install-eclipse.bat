@@ -3,9 +3,9 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=eclipse-4.4.2
-set eclipseUrl=http://ftp.osuosl.org/pub/eclipse//technology/epp/downloads/release/luna/SR2/eclipse-java-luna-SR2-win32-x86_64.zip
-set eclipseMD5=d27e38f21352bfea03749319bf499dea
+set packageName=eclipse-4.7
+set eclipseUrl=http://mirror.math.princeton.edu/pub/eclipse//technology/epp/downloads/release/oxygen/1a/eclipse-java-oxygen-1a-win32-x86_64.zip
+set eclipseMD5=46121ba3c2453f93f8446154037ff81a
 @rem set pydevUrl=http://iweb.dl.sourceforge.net/project/pydev/pydev/PyDev%203.2.0/PyDev%203.2.0.zip
 :: can't figure out how to escape the percent signs all the way down to the wget call
 set pydevUrl=http://bit.ly/1GGHt0g

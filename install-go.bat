@@ -3,7 +3,7 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=go1.6
+set packageName=go1.9.2
 set goUrl=https://storage.googleapis.com/golang/%packageName%.windows-amd64.msi
 :::::::::::::::::::::::::::::::::
 
@@ -15,7 +15,7 @@ pushd .
 cd "%DOWNLOAD_DIR%
 call :download %goUrl% || goto :error
 set msiFile=%_rv%
-call :verifyMD5Hash "%CD%\%msiFile%" f28ee97c688527a8e6e54314e1bc208f || goto :error
+call :verifyMD5Hash "%CD%\%msiFile%" 096d4cda3ef49fae01592b99c4b93fb1|| goto :error
 
 echo Installing...
 call :installPath %packageName%

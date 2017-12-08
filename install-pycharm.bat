@@ -4,10 +4,10 @@ setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
 set packageName=pycharm
-set version=2016.3.2
+set version=2017.3
 :: jetbrains packages are all downloadable as zip files, just change the 'exe' URL to end in 'zip'b
 set downloadUrl=https://download.jetbrains.com/python/pycharm-community-%version%.zip
-set md5sum=041cefd7c6bff0314ba549dc692ffc6b
+set md5sum=5f3bd50ed129d323a6f7b5381e0ae253
 :::::::::::::::::::::::::::::::::
 
 call :carobyRegistry || goto :error
