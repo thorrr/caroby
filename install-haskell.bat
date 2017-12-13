@@ -92,6 +92,11 @@ call :replaceStringInFile "%tmpfile%" "%tmpfile2%" "-- prefix: c:\Program Files\
 call :replaceStringInFile "%tmpfile2%" "%tmpfile3%" "-- prefix: %cabalDir%" "   prefix: %cabalDir%" || goto :error
 :: add logs-dir
 call :replaceStringInFile "%tmpfile3%" "%cabalConfig%" "-- logs-dir: %cabalDir%" "logs-dir: %cabalDir%" || goto :error
+:: fix paths so that gcc things will build
+>> "%cabalConfig%" echo extra-prog-path: %haskellPath%\msys\usr\bin
+>> "%cabalConfig%" echo extra-lib-dirs: %haskellPath%\mingw\lib
+>> "%cabalConfig%" echo extra-include-dirs: %haskellPath%\mingw\include
+
 
 
 :::::::::: End of script :::::::
