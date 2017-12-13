@@ -7,7 +7,7 @@ set PYTHON_VERSION=3.6.1
 set md5sum_x64=a055a1a0e938e74c712a1c495261ae6c
 set md5sum_x32=4ba2c79b103f6003bc4611c837a08208
 :::::::::::::::::::::::::::::::::
-set PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~-0,-2%
+set /a PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~0,1%
 :::::::::::::::::::::::::::::::::
 
 :checkForCleanup
