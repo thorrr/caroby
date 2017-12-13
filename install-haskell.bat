@@ -56,7 +56,7 @@ call :installPathRelative %packageName% || goto :error
 set haskellDir=%_rv%
 >"%initName%" echo @echo off
 >>"%initName%" echo.
->>"%initName%" echo set PATH=%%PATH%%;%haskellDir%\bin;%haskellDir%\lib;%haskellDir%\lib\extralibs\bin;%haskellDir%\mingw\bin;%haskellDir%\code
+>>"%initName%" echo set PATH=%%PATH%%;;%%USERPROFILE%%\.cabal\bin;%haskellDir%\bin;%haskellDir%\lib;%haskellDir%\lib\extralibs\bin;%haskellDir%\mingw\bin;%haskellDir%\code
 >>"%initName%" echo set CABAL_CONFIG=%%USERPROFILE%%\.cabal\config
 
 :: create a unix-like default cabal location ~/.cabal
