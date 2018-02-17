@@ -3,8 +3,13 @@
 setlocal
 pushd .
 :::::::::::::::::::::::::::::::::
-set packageName=node-v8.4.0
-set nodejsUrl=https://nodejs.org/dist/v8.4.0/node-v8.4.0-x64.msi
+set nodeVersion=v8.9.4
+set md5sum=52a3e471c4821cb9225cd6af91e0b6c3
+:::::::::::::::::::::::::::::::::
+
+:::::::::::::::::::::::::::::::::
+set packageName=node-%nodeVersion%
+set nodejsUrl=https://nodejs.org/dist/%nodeVersion%/node-%nodeVersion%-x64.msi
 :::::::::::::::::::::::::::::::::
 
 call :carobyRegistry || goto :error
@@ -15,7 +20,7 @@ pushd .
 cd "%DOWNLOAD_DIR%
 call :download %nodejsUrl% || goto :error
 set msiFile=%_rv%
-call :verifyMD5Hash "%CD%\%msiFile%" d3db846dcb4e898d55d4e56cc4e9b883 || goto :error
+call :verifyMD5Hash "%CD%\%msiFile%" %md5sum% || goto :error
 
 echo Installing...
 call :installPath %packageName%
