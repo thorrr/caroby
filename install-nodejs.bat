@@ -8,6 +8,9 @@ set md5sum=52a3e471c4821cb9225cd6af91e0b6c3
 :::::::::::::::::::::::::::::::::
 
 :::::::::::::::::::::::::::::::::
+:: a short path:  the installer still needs fix for
+:: https://github.com/nodejs/node-v0.x-archive/issues/6960
+set tmpInstallDir=c:\_n_
 set packageName=node-%nodeVersion%
 set nodejsUrl=https://nodejs.org/dist/%nodeVersion%/node-%nodeVersion%-x64.msi
 :::::::::::::::::::::::::::::::::
@@ -23,9 +26,16 @@ set msiFile=%_rv%
 call :verifyMD5Hash "%CD%\%msiFile%" %md5sum% || goto :error
 
 echo Installing...
+if exist "%tmpInstallDir%" (
+    echo Error:  %tmpInstallDir% can't exist because we use it as a temp install dir.
+    goto :error
+)
+
 call :installPath %packageName%
 set installDir=%_rv%
-start /wait msiexec /a "%msiFile%" TARGETDIR="%installDir%" /q
+start /wait msiexec /a "%msiFile%" /quiet TARGETDIR="%tmpInstallDir%" ADDLOCAL=ALL REMOVE=NodePerfCtrSupport,NodeEtwSupport /log node-install.log
+move "%tmpInstallDir%" "%installDir%" 2>NUL 1>NUL || goto :error
+move node-install.log "%installDir%" 2>NUL 1>NUL || goto :error
 echo Done.
 popd
 
@@ -51,6 +61,11 @@ if "%_err%" neq "" (
 ) else (
     if %errorlevel% neq 0 echo errorlevel is %errorlevel%
 )
+:: our custom exit handler
+if exist "%tmpInstallDir%" (
+    rmdir /s /q "%tmpInstallDir%"
+)
+
 echo.
 popd
 endlocal
