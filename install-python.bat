@@ -3,8 +3,8 @@
 setlocal
 pushd .
 :: User modifiable ::::::::::::::
-set PYTHON_VERSION=3.6.1
-set md5sum_x64=a055a1a0e938e74c712a1c495261ae6c
+set PYTHON_VERSION=3.8.2
+set md5sum_x64=2586cdad1a363d1a8abb5fc102b2d418
 set md5sum_x32=4ba2c79b103f6003bc4611c837a08208
 :::::::::::::::::::::::::::::::::
 set /a PYTHON_MAJOR_VERSION=%PYTHON_VERSION:~0,1%
@@ -115,7 +115,7 @@ set PIP_REQUIRE_VIRTUALENV=
 pushd .
 cd "%DOWNLOAD_DIR%"
 call :download https://bootstrap.pypa.io/get-pip.py || goto :error
-call :verifyMD5Hash "%CD%\get-pip.py" 3b74f5cd0740a05802a23b019ce579a3 || goto :error
+call :verifyMD5Hash "%CD%\get-pip.py" b7666e8e7f98f513096601d4203fb007 || goto :error
 "%installDir%\python.exe" get-pip.py || goto :error
 "%installDir%\Scripts\pip.exe" install virtualenv || goto :error
 ::finally, install pywin32
